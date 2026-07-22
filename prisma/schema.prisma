@@ -1,0 +1,19 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MealType { BREAKFAST LUNCH DINNER SNACK }
+enum GoalType { LOSE MAINTAIN GAIN }
+model User { id String @id @default(cuid()) email String @unique createdAt DateTime @default(now()) profile Profile? meals Meal[] waterLogs WaterIntake[] weightEntries WeightEntry[] goals Goal[] @@index([createdAt]) }
+model Profile { id String @id @default(cuid()) userId String @unique user User @relation(fields:[userId],references:[id],onDelete:Cascade) name String heightCm Float? weightKg Float? targetWeightKg Float? activityLevel String? goalType GoalType? allergies String[] @default([]) updatedAt DateTime @updatedAt }
+model Food { id String @id @default(cuid()) externalId String? @unique source String? name String brand String? barcode String? @unique servingGrams Float caloriesPer100g Float proteinPer100g Float @default(0) carbsPer100g Float @default(0) fatPer100g Float @default(0) fiberPer100g Float @default(0) sodiumMg Float @default(0) entries MealEntry[] @@index([name]) @@index([barcode]) }
+model Meal { id String @id @default(cuid()) userId String user User @relation(fields:[userId],references:[id],onDelete:Cascade) type MealType consumedAt DateTime @default(now()) entries MealEntry[] @@index([userId,consumedAt]) }
+model MealEntry { id String @id @default(cuid()) mealId String meal Meal @relation(fields:[mealId],references:[id],onDelete:Cascade) foodId String food Food @relation(fields:[foodId],references:[id]) servingGrams Float calories Float proteinG Float carbsG Float fatG Float @@index([mealId]) }
+model WaterIntake { id String @id @default(cuid()) userId String user User @relation(fields:[userId],references:[id],onDelete:Cascade) amountMl Int loggedAt DateTime @default(now()) @@index([userId,loggedAt]) }
+model WeightEntry { id String @id @default(cuid()) userId String user User @relation(fields:[userId],references:[id],onDelete:Cascade) kilograms Float recordedAt DateTime @default(now()) @@unique([userId,recordedAt]) }
+model Goal { id String @id @default(cuid()) userId String user User @relation(fields:[userId],references:[id],onDelete:Cascade) calories Int proteinG Int carbsG Int fatG Int waterMl Int startsAt DateTime @default(now()) endsAt DateTime? @@index([userId,startsAt]) }
