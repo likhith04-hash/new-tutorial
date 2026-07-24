@@ -6,9 +6,10 @@ import { useNutrition } from '@/app/components/NutritionContext'
 interface HeaderProps {
   onMenuToggle?: () => void
   onLogFood?: () => void
+  onSearch?: () => void
 }
 
-export default function Header({ onMenuToggle, onLogFood }: HeaderProps) {
+export default function Header({ onMenuToggle, onLogFood, onSearch }: HeaderProps) {
   const { profile } = useNutrition()
 
   const hour = new Date().getHours()
@@ -26,7 +27,9 @@ export default function Header({ onMenuToggle, onLogFood }: HeaderProps) {
         <h1>{greeting}, {firstName} <span>✦</span></h1>
       </div>
       <div className="header-actions">
-        <button className="round"><Icon name="search" size={18} /></button>
+        <button className="round" onClick={onSearch || (() => window.dispatchEvent(new Event('open-search')))}>
+          <Icon name="search" size={18} />
+        </button>
         <button className="round notification"><Icon name="bell" size={18} /><em /></button>
         {onLogFood && (
           <button className="add" onClick={onLogFood}>

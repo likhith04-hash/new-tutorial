@@ -1,11 +1,32 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NutritionProvider } from './NutritionContext'
 import Sidebar from './Sidebar'
+import SearchModal from './SearchModal'
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+
+  useEffect(() => {
+    const handleOpenSearch = () => setSearchOpen(true)
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault()
+        setSearchOpen(true)
+      }
+    }
+
+    window.addEventListener('open-search', handleOpenSearch)
+    window.addEventListener('keydown', handleKeyDown)
+    
+    return () => {
+      window.removeEventListener('open-search', handleOpenSearch)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
 
   return (
     <NutritionProvider>
@@ -14,6 +35,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
         <section className="content">
           {children}
         </section>
+        <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
       </main>
     </NutritionProvider>
   )
