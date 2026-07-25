@@ -1,13 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
 import { NutritionProvider } from './NutritionContext'
 import Sidebar from './Sidebar'
 import SearchModal from './SearchModal'
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
 
@@ -30,21 +28,15 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     }
   }, [])
 
-  const isLandingPage = pathname === '/'
-
   return (
     <NutritionProvider>
-      {isLandingPage ? (
-        children
-      ) : (
-        <main className="shell">
-          <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
-          <section className="content">
-            {children}
-          </section>
-          <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
-        </main>
-      )}
+      <main className="shell">
+        <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+        <section className="content">
+          {children}
+        </section>
+        <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+      </main>
     </NutritionProvider>
   )
 }
