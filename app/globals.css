@@ -55,6 +55,7 @@
   --clr-water:       #73b7bf;
   --clr-water-bg:    #deeff0;
   --clr-droplet-off: #dfe7e7;
+  --clr-ring-track:  #eee9e1;
 
   /* typography */
   --ff-body:    'DM Sans', Arial, sans-serif;
@@ -101,6 +102,7 @@
   --clr-brand-light: #382823;
   --clr-hero:        #1f3833;
   --clr-hero-bar:    #36544e;
+  --clr-ring-track:  #2b3935;
 }
 
 /* ═══════════════════════════════════════════════
@@ -281,7 +283,7 @@ h1 span { color: var(--clr-hero-accent); }
   background: var(--clr-surface);
   border-radius: var(--r-full);
   width: 39px; height: 39px;
-  color: #625d59;
+  color: var(--clr-text-muted);
   position: relative;
   display: grid; place-items: center;
   transition: box-shadow var(--tr-fast), border-color var(--tr-fast);

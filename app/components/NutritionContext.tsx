@@ -258,7 +258,13 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const updateProfile = useCallback((patch: Partial<UserProfile>) => {
-    setProfile(prev => ({ ...prev, ...patch }))
+    setProfile(prev => {
+      const updated = { ...prev, ...patch }
+      if (typeof document !== 'undefined' && updated.theme) {
+        document.documentElement.setAttribute('data-theme', updated.theme)
+      }
+      return updated
+    })
   }, [])
 
   const addChatMessage = useCallback((msg: Omit<ChatMessage, 'id' | 'timestamp'>) => {

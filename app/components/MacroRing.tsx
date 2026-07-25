@@ -38,7 +38,7 @@ export default function MacroRing({ value, total, label, color, size = 91, unit 
         style={{
           width: size,
           height: size,
-          background: `conic-gradient(${color} ${animPct * 3.6}deg, #eee9e1 0deg)`,
+          background: `conic-gradient(${color} ${animPct * 3.6}deg, var(--clr-ring-track) 0deg)`,
         }}
       >
         <div className="ring-hole" style={{ width: size - 16, height: size - 16 }}>

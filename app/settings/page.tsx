@@ -167,17 +167,49 @@ export default function SettingsPage() {
           <div className="form-group">
             <label className="form-label">Units</label>
             <div className="option-toggle">
-              <button className={local.units === 'metric' ? 'active' : ''} onClick={() => { setText('units', 'metric'); save() }}>Metric</button>
-              <button className={local.units === 'imperial' ? 'active' : ''} onClick={() => { setText('units', 'imperial'); save() }}>Imperial</button>
+              <button
+                className={local.units === 'metric' ? 'active' : ''}
+                onClick={() => {
+                  const updated = { ...local, units: 'metric' as const }
+                  setLocal(updated)
+                  updateProfile(updated)
+                }}
+              >
+                Metric
+              </button>
+              <button
+                className={local.units === 'imperial' ? 'active' : ''}
+                onClick={() => {
+                  const updated = { ...local, units: 'imperial' as const }
+                  setLocal(updated)
+                  updateProfile(updated)
+                }}
+              >
+                Imperial
+              </button>
             </div>
           </div>
           <div className="form-group">
             <label className="form-label">Theme</label>
             <div className="option-toggle">
-              <button className={local.theme === 'light' ? 'active' : ''} onClick={() => { setText('theme', 'light'); save() }}>
+              <button
+                className={local.theme === 'light' ? 'active' : ''}
+                onClick={() => {
+                  const updated = { ...local, theme: 'light' as const }
+                  setLocal(updated)
+                  updateProfile(updated)
+                }}
+              >
                 <Icon name="sun" size={14} /> Light
               </button>
-              <button className={local.theme === 'dark' ? 'active' : ''} onClick={() => { setText('theme', 'dark'); save() }}>
+              <button
+                className={local.theme === 'dark' ? 'active' : ''}
+                onClick={() => {
+                  const updated = { ...local, theme: 'dark' as const }
+                  setLocal(updated)
+                  updateProfile(updated)
+                }}
+              >
                 <Icon name="moon" size={14} /> Dark
               </button>
             </div>
