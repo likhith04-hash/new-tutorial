@@ -8,15 +8,10 @@ export default function LandingPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [coachQuery, setCoachQuery] = useState('')
-  const [activeTab, setActiveTab] = useState('all')
   const [waterGlasses, setWaterGlasses] = useState(6)
   const [loggedMeals, setLoggedMeals] = useState([
     { name: 'Grilled Salmon Quinoa Bowl', cals: 580, protein: 42, carbs: 45, fat: 18, time: '1:15 PM', icon: '🥗' },
     { name: 'Avocado Toast & Poached Egg', cals: 360, protein: 16, carbs: 32, fat: 20, time: '8:30 AM', icon: '🥑' },
-  ])
-  const [coachMessages, setCoachMessages] = useState([
-    { role: 'user', content: 'What should I eat to hit my 45g protein target tonight?' },
-    { role: 'assistant', content: '✦ Based on your remaining 913 kcal and 45g protein target, I recommend a Grilled Salmon Quinoa Bowl with steamed broccoli. It delivers 42g protein with heart-healthy omega-3 fats.' }
   ])
 
   useEffect(() => {
@@ -44,21 +39,11 @@ export default function LandingPage() {
 
   const handleAskCoach = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!coachQuery.trim()) return
-    const userMsg = coachQuery.trim()
-    setCoachQuery('')
-    setCoachMessages(prev => [
-      ...prev,
-      { role: 'user', content: userMsg },
-      { role: 'assistant', content: `✦ Analyzing your daily intake: For "${userMsg}", consider a lean protein option like Greek Yogurt (22g protein) or Edamame (17g protein) to maintain your daily deficit while staying in your macro window.` }
-    ])
-  }
-
-  const handleAddQuickMeal = (name: string, cals: number, protein: number, carbs: number, fat: number, icon: string) => {
-    setLoggedMeals(prev => [
-      { name, cals, protein, carbs, fat, time: 'Just now', icon },
-      ...prev
-    ])
+    if (!coachQuery.trim()) {
+      router.push('/coach')
+    } else {
+      router.push(`/coach?prompt=${encodeURIComponent(coachQuery.trim())}`)
+    }
   }
 
   const weeklyChartBars = [
@@ -97,48 +82,42 @@ export default function LandingPage() {
         }
       `}</style>
 
-      {/* 21st.dev Style Glass Navbar */}
+      {/* ---------------------------------------------------- */}
+      {/* HEADER / NAVBAR */}
+      {/* Logo | Features  AI Coach  Pricing | Get Started   */}
+      {/* ---------------------------------------------------- */}
       <header className="sticky top-0 z-50 border-b border-white/[0.08] bg-[#09090B]/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-6 md:px-8">
-          {/* Brand Logo */}
+          {/* Logo (Left) */}
           <Link href="/" className="flex items-center gap-3 outline-none group">
             <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#22D3EE] to-[#34D399] flex items-center justify-center text-[#09090B] font-bold text-sm shadow-[0_0_20px_rgba(34,211,238,0.3)] group-hover:scale-105 transition-transform">
               ✦
             </div>
             <span className="font-bold text-lg tracking-tight text-[#FFFFFF]">
-              Nourish<span className="text-[#22D3EE]">.os</span>
+              Nourish<span className="text-[#22D3EE]"> AI</span>
             </span>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Centered Navigation Links */}
           <nav className="hidden items-center gap-8 md:flex">
-            <a href="#dashboard" className="text-[14px] font-medium text-[#A1A1AA] transition-colors hover:text-[#FFFFFF]">
-              Dashboard
-            </a>
             <a href="#features" className="text-[14px] font-medium text-[#A1A1AA] transition-colors hover:text-[#FFFFFF]">
               Features
             </a>
             <a href="#coach" className="text-[14px] font-medium text-[#A1A1AA] transition-colors hover:text-[#FFFFFF]">
-              AI Intelligence
+              AI Coach
             </a>
-            <a href="#analytics" className="text-[14px] font-medium text-[#A1A1AA] transition-colors hover:text-[#FFFFFF]">
-              Analytics
+            <a href="#pricing" className="text-[14px] font-medium text-[#A1A1AA] transition-colors hover:text-[#FFFFFF]">
+              Pricing
             </a>
           </nav>
 
-          {/* Right Action CTA */}
+          {/* Primary CTA (Right) */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push('/dashboard')}
-              className="hidden sm:inline-flex text-[14px] font-medium text-[#A1A1AA] hover:text-[#FFFFFF] transition-colors"
+              className="inline-flex h-10 items-center justify-center rounded-full bg-[#FFFFFF] px-6 text-[14px] font-semibold text-[#09090B] hover:bg-[#22D3EE] transition-all duration-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] active:scale-95"
             >
-              Sign In
-            </button>
-            <button
-              onClick={() => router.push('/dashboard')}
-              className="inline-flex h-10 items-center justify-center rounded-full bg-[#FFFFFF] px-5 text-[14px] font-semibold text-[#09090B] hover:bg-[#22D3EE] transition-all duration-300 shadow-[0_0_20px_rgba(34,211,238,0.2)] active:scale-95"
-            >
-              Launch OS →
+              Get Started →
             </button>
           </div>
         </div>
@@ -149,383 +128,181 @@ export default function LandingPage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1280px] h-[600px] os-glow pointer-events-none" />
 
         {/* ---------------------------------------------------- */}
-        {/* HERO SECTION (Left Text + Right Interactive OS Bento Preview) */}
+        {/* HERO SECTION */}
+        {/* Left: AI Badge, Massive Headline, Points, CTAs, Trust */}
+        {/* Right: Floating AI Dashboard Preview Card            */}
         {/* ---------------------------------------------------- */}
         <section className="relative z-10 pt-16 pb-24 md:pt-24 md:pb-32 max-w-[1280px] mx-auto px-6 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* LEFT HERO COLUMN */}
             <div className="lg:col-span-6 space-y-8">
+              {/* ✨ AI Nutrition Intelligence Badge */}
               <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-[#111113] px-4 py-1.5 text-[13px] font-medium text-[#22D3EE]">
                 <span className="h-2 w-2 rounded-full bg-[#22D3EE] animate-pulse" />
-                AI OPERATING SYSTEM FOR NUTRITION v2.0
+                ✨ AI Nutrition Intelligence
               </div>
 
-              {/* Hero Title: 72px Bold */}
+              {/* Headline: 72px Bold */}
               <h1 className="lp-hero-in text-5xl md:text-[72px] font-bold tracking-[-0.02em] leading-[1.05] text-[#FFFFFF]">
-                Intelligence for<br />
+                The operating system<br />
                 <span className="bg-gradient-to-r from-[#22D3EE] via-[#34D399] to-[#FACC15] bg-clip-text text-transparent">
-                  your metabolism.
+                  for your nutrition.
                 </span>
               </h1>
 
-              {/* Supporting Body Text: 18px */}
-              <p className="lp-hero-in text-[18px] text-[#A1A1AA] leading-[1.6] max-w-xl [animation-delay:0.2s]">
-                Nourish turns every meal, glass of water, and body metric into clear, automated health intelligence — zero spreadsheets, zero guesswork, zero friction.
-              </p>
+              {/* Supporting Bullet Points */}
+              <div className="lp-hero-in space-y-3 text-[18px] text-[#A1A1AA] leading-[1.6] [animation-delay:0.2s]">
+                <p className="flex items-center gap-3 text-[#FFFFFF]">
+                  <span className="text-[#22D3EE] font-bold">✓</span> Track meals instantly with photo &amp; AI recognition.
+                </p>
+                <p className="flex items-center gap-3 text-[#FFFFFF]">
+                  <span className="text-[#34D399] font-bold">✓</span> Get AI coaching in real time based on your target logs.
+                </p>
+                <p className="flex items-center gap-3 text-[#FFFFFF]">
+                  <span className="text-[#FACC15] font-bold">✓</span> Reach your goals with adaptive nutrition &amp; macro targets.
+                </p>
+              </div>
 
-              {/* Input & Action Buttons */}
-              <form onSubmit={handleStartTracking} className="lp-hero-in flex flex-col sm:flex-row gap-3 max-w-md [animation-delay:0.3s]">
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="flex-1 h-12 rounded-full bg-[#111113] border border-white/[0.08] px-5 text-sm text-[#FFFFFF] placeholder:text-[#A1A1AA] focus:border-[#22D3EE] focus:ring-1 focus:ring-[#22D3EE]/30 focus:outline-none transition-all"
-                />
+              {/* CTA Row: [ Start Free ] [ Live Demo ] */}
+              <div className="lp-hero-in flex flex-col sm:flex-row gap-4 items-stretch sm:items-center pt-2 [animation-delay:0.3s]">
                 <button
-                  type="submit"
-                  className="h-12 rounded-full bg-[#22D3EE] hover:bg-[#34D399] text-[#09090B] font-bold px-7 text-sm transition-all duration-300 shadow-[0_0_25px_rgba(34,211,238,0.3)] active:scale-95 whitespace-nowrap"
+                  onClick={() => router.push('/dashboard')}
+                  className="h-12 rounded-full bg-[#22D3EE] hover:bg-[#34D399] text-[#09090B] font-bold px-8 text-sm transition-all duration-300 shadow-[0_0_25px_rgba(34,211,238,0.3)] active:scale-95 text-center"
                 >
                   Start Free →
                 </button>
-              </form>
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="h-12 rounded-full border border-white/[0.08] bg-[#111113] hover:bg-white/[0.08] text-[#FFFFFF] font-semibold px-8 text-sm transition-all duration-300 active:scale-95 text-center"
+                >
+                  Live Demo
+                </button>
+              </div>
 
-              {/* Trust Indicators */}
-              <div className="flex items-center gap-6 pt-2 text-[13px] font-medium text-[#A1A1AA]">
-                <span className="flex items-center gap-2 text-[#34D399]">
-                  ✓ 15,000+ Active Users
-                </span>
-                <span className="flex items-center gap-2 text-[#22D3EE]">
-                  ✓ 1.2M+ Meals Logged
-                </span>
-                <span className="flex items-center gap-2 text-[#FACC15]">
-                  ✓ 98.4% Retention
-                </span>
+              {/* Trust Badge */}
+              <div className="pt-2 text-[13px] font-medium text-[#A1A1AA] flex items-center gap-2">
+                <span className="text-[#34D399]">✦</span> Trusted by 10,000+ active users &amp; health builders
               </div>
             </div>
 
-            {/* RIGHT HERO COLUMN: Interactive Dashboard Preview Box (NOT an image) */}
+            {/* RIGHT HERO COLUMN: Floating AI Dashboard Preview Card */}
             <div className="lg:col-span-6 relative">
               <div className="bg-[#111113] border border-white/[0.08] rounded-[20px] p-6 sm:p-8 shadow-2xl shadow-black/90 relative hover:border-[#22D3EE]/30 transition-all duration-500 group">
                 
-                {/* OS Header */}
-                <div className="flex justify-between items-start mb-8 pb-6 border-b border-white/[0.08]">
-                  <div>
-                    <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">Daily Calorie Target</span>
-                    <div className="flex items-baseline gap-3 mt-1">
-                      <span className="text-[40px] font-bold text-[#FFFFFF] tracking-tight leading-none">1,187</span>
-                      <span className="text-[18px] text-[#A1A1AA] font-normal">/ 2,100 kcal</span>
-                    </div>
-                  </div>
-                  <div className="w-16 h-16 rounded-2xl bg-[#09090B] border border-white/[0.08] flex flex-col items-center justify-center text-center">
-                    <span className="text-[13px] text-[#22D3EE] font-medium">56%</span>
-                    <span className="text-[11px] text-[#A1A1AA] uppercase font-bold">Goal</span>
+                {/* Floating Preview Title */}
+                <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/[0.08]">
+                  <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">Floating AI Dashboard</span>
+                  <span className="text-[11px] font-bold text-[#34D399] bg-[#34D399]/10 px-2.5 py-0.5 rounded-full border border-[#34D399]/20">
+                    Live OS Preview
+                  </span>
+                </div>
+
+                {/* Calories Display */}
+                <div className="bg-[#09090B] border border-white/[0.08] p-5 rounded-[16px] mb-4">
+                  <span className="text-[13px] font-medium uppercase tracking-wider text-[#A1A1AA]">Calories Today</span>
+                  <p className="text-[40px] font-bold text-[#FFFFFF] leading-none mt-2">1,750 <span className="text-sm font-normal text-[#A1A1AA]">/ 2,100 kcal</span></p>
+                  <div className="w-full bg-[#111113] h-2 rounded-full mt-3 overflow-hidden">
+                    <div className="bg-[#22D3EE] h-full w-[83%]" />
                   </div>
                 </div>
 
-                {/* Macros Bento Grid */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="bg-[#09090B] border border-white/[0.08] rounded-[16px] p-4">
-                    <span className="text-[13px] font-medium uppercase text-[#34D399] tracking-wider">Protein</span>
-                    <p className="text-[40px] font-bold text-[#FFFFFF] leading-none mt-2">85g</p>
-                    <p className="text-[13px] text-[#A1A1AA] mt-1">Goal: 130g</p>
-                    <div className="w-full bg-[#111113] h-1.5 rounded-full mt-3 overflow-hidden">
-                      <div className="bg-[#34D399] h-full w-[65%]" />
-                    </div>
-                  </div>
-
-                  <div className="bg-[#09090B] border border-white/[0.08] rounded-[16px] p-4">
-                    <span className="text-[13px] font-medium uppercase text-[#FACC15] tracking-wider">Carbs</span>
-                    <p className="text-[40px] font-bold text-[#FFFFFF] leading-none mt-2">140g</p>
-                    <p className="text-[13px] text-[#A1A1AA] mt-1">Goal: 220g</p>
-                    <div className="w-full bg-[#111113] h-1.5 rounded-full mt-3 overflow-hidden">
-                      <div className="bg-[#FACC15] h-full w-[58%]" />
-                    </div>
-                  </div>
-
-                  <div className="bg-[#09090B] border border-white/[0.08] rounded-[16px] p-4">
-                    <span className="text-[13px] font-medium uppercase text-[#22D3EE] tracking-wider">Fat</span>
-                    <p className="text-[40px] font-bold text-[#FFFFFF] leading-none mt-2">42g</p>
-                    <p className="text-[13px] text-[#A1A1AA] mt-1">Goal: 70g</p>
-                    <div className="w-full bg-[#111113] h-1.5 rounded-full mt-3 overflow-hidden">
-                      <div className="bg-[#22D3EE] h-full w-[60%]" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* AI Edge Nudge Alert */}
-                <div className="bg-[#09090B] border border-[#22D3EE]/30 rounded-[16px] p-4 flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-[#22D3EE]/10 text-[#22D3EE] flex items-center justify-center font-bold text-lg flex-shrink-0">
+                {/* AI Coach Card */}
+                <div className="bg-[#09090B] border border-[#22D3EE]/30 p-4 rounded-[16px] mb-4 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#22D3EE]/10 text-[#22D3EE] flex items-center justify-center font-bold text-sm">
                     ✦
                   </div>
                   <div className="flex-1">
-                    <p className="text-[13px] font-medium text-[#22D3EE]">Proactive AI Insight</p>
-                    <p className="text-[14px] text-[#A1A1AA] mt-0.5">&ldquo;You have 913 kcal remaining today. Need a protein-rich dinner recommendation?&rdquo;</p>
+                    <p className="text-[13px] font-bold text-[#22D3EE]">AI Coach Recommendation</p>
+                    <p className="text-[14px] text-[#FFFFFF] font-medium">&ldquo;Eat 35g more protein for dinner to hit your daily recovery target!&rdquo;</p>
                   </div>
-                  <button
-                    onClick={() => router.push('/coach?prompt=Suggest%20a%20high-protein%20dinner')}
-                    className="bg-[#22D3EE] hover:bg-[#34D399] text-[#09090B] font-bold text-[13px] px-3.5 py-2 rounded-full transition-colors whitespace-nowrap"
-                  >
-                    Ask Coach
-                  </button>
                 </div>
-              </div>
 
-              {/* Floating Hydration Widget Overlay */}
-              <div className="absolute -bottom-6 -left-4 sm:-left-6 bg-[#111113] border border-white/[0.08] rounded-[20px] p-4 flex items-center gap-4 shadow-2xl z-20">
-                <div className="w-11 h-11 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-xl font-bold">
-                  💧
+                {/* Protein Indicator */}
+                <div className="bg-[#09090B] border border-white/[0.08] p-4 rounded-[16px] flex justify-between items-center">
+                  <div>
+                    <span className="text-[13px] font-medium uppercase text-[#34D399]">Protein Intake</span>
+                    <p className="text-[24px] font-bold text-[#FFFFFF] leading-tight">95g / 130g</p>
+                  </div>
+                  <span className="text-xs font-bold text-[#34D399] bg-[#34D399]/10 px-3 py-1 rounded-full border border-[#34D399]/30">
+                    73% Complete
+                  </span>
                 </div>
-                <div>
-                  <p className="text-[13px] font-medium uppercase tracking-wider text-blue-400">Hydration OS</p>
-                  <p className="text-[18px] font-medium text-[#FFFFFF]">1.8L <span className="text-[#A1A1AA] text-sm">/ 2.5L</span></p>
-                </div>
+
               </div>
             </div>
           </div>
         </section>
 
         {/* ---------------------------------------------------- */}
-        {/* BENTO GRID DASHBOARD WIDGETS SECTION */}
+        {/* BENTO GRID SECTION */}
+        {/* ┌───────────────────────┬───────────────┐           */}
+        {/* │    Calories Today     │  AI Coach     │           */}
+        {/* ├───────────────────────┼───────────────┤           */}
+        {/* │ Weekly Progress       │ Water         │           */}
+        {/* ├───────────────┬───────┴───────────────┤           */}
+        {/* │ Protein Ring  │ Today's Meals         │           */}
+        {/* └───────────────┴───────────────────────┘           */}
         {/* ---------------------------------------------------- */}
-        <section id="dashboard" className="py-24 border-t border-white/[0.08] bg-[#09090B]">
-          <div className="max-w-[1280px] mx-auto px-6 md:px-8">
+        <section id="features" className="py-24 border-t border-white/[0.08] bg-[#09090B]">
+          <div className="max-w-[1280px] mx-auto px-6 md:px-8 space-y-12">
             
-            {/* Section Title: 44px Semibold */}
-            <div className="max-w-3xl mb-16 space-y-4">
-              <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE] bg-[#111113] border border-white/[0.08] px-4 py-1.5 rounded-full">
-                RE-ENGINEERED OPERATING SYSTEM
-              </span>
+            <div className="max-w-2xl space-y-3">
+              <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">BENTO DASHBOARD ENGINE</span>
               <h2 className="text-3xl md:text-[44px] font-semibold text-[#FFFFFF] tracking-tight leading-tight">
-                Designed for high-performance health tracking.
+                Everything you need to master your health.
               </h2>
-              <p className="text-[18px] text-[#A1A1AA] leading-[1.6]">
-                Every component built from scratch with Geist typography, strict 12-column grid alignment, and micro interactions.
-              </p>
             </div>
 
-            {/* BENTO GRID (12-Column Responsive Layout) */}
+            {/* Exact Bento Grid Architecture */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
               
-              {/* FEATURE CARD 1: Calorie Overview Ring (8 Columns) */}
-              <div className="col-span-12 md:col-span-8 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 group flex flex-col justify-between">
+              {/* TOP ROW: Calories Today (8 Cols) | AI Coach (4 Cols) */}
+              <div className="col-span-12 md:col-span-8 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 flex flex-col justify-between">
                 <div>
-                  <div className="flex justify-between items-start mb-8">
+                  <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">Daily Intake Overview</span>
+                  <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1 mb-6">Calories Today</h3>
+                  
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 bg-[#09090B] border border-white/[0.08] p-6 rounded-[16px]">
                     <div>
-                      <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">Widget 01</span>
-                      <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1">Calorie Intake &amp; Goal Ring</h3>
+                      <p className="text-[40px] font-bold text-[#FFFFFF] leading-none">1,750 <span className="text-sm font-normal text-[#A1A1AA]">kcal</span></p>
+                      <p className="text-[13px] text-[#34D399] font-medium mt-2">350 kcal remaining for dinner</p>
                     </div>
-                    <span className="bg-[#22D3EE]/10 border border-[#22D3EE]/30 text-[#22D3EE] text-[13px] font-medium px-3.5 py-1 rounded-full">
-                      56% Reached
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
-                    {/* Ring Visualization */}
-                    <div className="relative w-44 h-44 mx-auto flex items-center justify-center">
-                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                        <path
-                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                          fill="none"
-                          stroke="rgba(255,255,255,0.06)"
-                          strokeWidth="3.5"
-                        />
-                        <path
-                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                          fill="none"
-                          stroke="#22D3EE"
-                          strokeDasharray="56, 100"
-                          strokeWidth="3.5"
-                          className="transition-all duration-1000"
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                        <span className="text-[40px] font-bold text-[#FFFFFF] tracking-tight leading-none">1,187</span>
-                        <span className="text-[13px] text-[#A1A1AA] font-medium mt-1">kcal consumed</span>
-                      </div>
-                    </div>
-
-                    {/* Stats List */}
-                    <div className="space-y-4">
-                      <div className="bg-[#09090B] border border-white/[0.08] p-4 rounded-[16px] flex justify-between items-center">
-                        <span className="text-[13px] text-[#A1A1AA] font-medium">Daily Target</span>
-                        <span className="text-[18px] font-medium text-[#FFFFFF]">2,100 kcal</span>
-                      </div>
-                      <div className="bg-[#09090B] border border-white/[0.08] p-4 rounded-[16px] flex justify-between items-center">
-                        <span className="text-[13px] text-[#A1A1AA] font-medium">Remaining</span>
-                        <span className="text-[18px] font-medium text-[#34D399]">913 kcal</span>
-                      </div>
-                      <div className="bg-[#09090B] border border-white/[0.08] p-4 rounded-[16px] flex justify-between items-center">
-                        <span className="text-[13px] text-[#A1A1AA] font-medium">Burned Energy</span>
-                        <span className="text-[18px] font-medium text-[#FACC15]">420 kcal</span>
-                      </div>
+                    <div className="w-20 h-20 rounded-full border-4 border-[#22D3EE] border-t-zinc-800 flex flex-col items-center justify-center font-bold text-sm text-[#FFFFFF]">
+                      <span>83%</span>
+                      <span className="text-[9px] text-[#A1A1AA] uppercase">Goal</span>
                     </div>
                   </div>
                 </div>
-
-                <div className="mt-8 pt-4 border-t border-white/[0.08] flex items-center justify-between text-[13px] text-[#A1A1AA]">
-                  <span>Updated real-time</span>
-                  <button onClick={() => router.push('/dashboard')} className="text-[#22D3EE] font-medium hover:underline">Open Dashboard →</button>
+                <div className="mt-6 pt-4 border-t border-white/[0.08] flex justify-between items-center text-[13px] text-[#A1A1AA]">
+                  <span>Target: 2,100 kcal</span>
+                  <button onClick={() => router.push('/dashboard')} className="text-[#22D3EE] font-medium hover:underline">View Details →</button>
                 </div>
               </div>
 
-              {/* CARD 2: AI Coach Edge Streaming (4 Columns) */}
-              <div className="col-span-12 md:col-span-4 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 group flex flex-col justify-between">
+              <div className="col-span-12 md:col-span-4 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 flex flex-col justify-between">
                 <div>
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">Widget 02</span>
-                      <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1">Real-Time AI Coach</h3>
-                    </div>
+                  <div className="flex justify-between items-center mb-6">
+                    <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">AI Coach</span>
                     <span className="h-2 w-2 rounded-full bg-[#34D399] animate-pulse" />
                   </div>
-
-                  {/* Chat Messages */}
-                  <div className="space-y-4 max-h-[220px] overflow-y-auto mb-4 pr-1">
-                    {coachMessages.map((msg, idx) => (
-                      <div
-                        key={idx}
-                        className={`p-4 rounded-[14px] text-xs leading-relaxed ${
-                          msg.role === 'user'
-                            ? 'bg-[#09090B] text-[#FFFFFF] border border-white/[0.08] ml-4'
-                            : 'bg-[#22D3EE]/10 border border-[#22D3EE]/20 text-[#FFFFFF] mr-4'
-                        }`}
-                      >
-                        {msg.content}
-                      </div>
-                    ))}
+                  <h3 className="text-[18px] font-medium text-[#FFFFFF] mb-4">Real-Time Insight</h3>
+                  <div className="bg-[#09090B] border border-[#22D3EE]/30 p-5 rounded-[16px] text-sm text-[#FFFFFF] leading-relaxed">
+                    ✦ &ldquo;Eat more protein tonight! A grilled salmon bowl will hit your target while staying in your calorie budget.&rdquo;
                   </div>
-
-                  {/* Input Form */}
-                  <form onSubmit={handleAskCoach} className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Ask coach anything..."
-                      value={coachQuery}
-                      onChange={e => setCoachQuery(e.target.value)}
-                      className="flex-1 h-10 bg-[#09090B] border border-white/[0.08] rounded-full px-4 text-xs text-[#FFFFFF] placeholder:text-[#A1A1AA] focus:border-[#22D3EE] focus:outline-none"
-                    />
-                    <button type="submit" className="h-10 bg-[#22D3EE] text-[#09090B] font-bold px-4 rounded-full text-xs hover:bg-[#34D399] transition-colors">
-                      Send
-                    </button>
-                  </form>
                 </div>
-
-                <div className="mt-6 pt-4 border-t border-white/[0.08] flex items-center justify-between text-[13px] text-[#A1A1AA]">
-                  <span>Edge Stream Engine</span>
-                  <button onClick={() => router.push('/coach')} className="text-[#22D3EE] font-medium hover:underline">Full Coach →</button>
+                <div className="mt-6 pt-4 border-t border-white/[0.08] flex justify-between items-center text-[13px] text-[#A1A1AA]">
+                  <span>Streaming Engine</span>
+                  <button onClick={() => router.push('/coach')} className="text-[#22D3EE] font-medium hover:underline">Ask AI →</button>
                 </div>
               </div>
 
-              {/* CARD 3: One-Tap Preset Food Logging (4 Columns) */}
-              <div className="col-span-12 md:col-span-4 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 group flex flex-col justify-between">
+              {/* MIDDLE ROW: Weekly Progress (8 Cols) | Water (4 Cols) */}
+              <div className="col-span-12 md:col-span-8 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 flex flex-col justify-between">
                 <div>
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <span className="text-[13px] font-medium uppercase tracking-wider text-[#34D399]">Widget 03</span>
-                      <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1">One-Tap Presets</h3>
-                    </div>
-                    <span className="text-[13px] font-medium text-[#A1A1AA]">Instant</span>
-                  </div>
-
-                  <p className="text-[13px] text-[#A1A1AA] mb-4">Tap to quickly add meals:</p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    <button
-                      onClick={() => handleAddQuickMeal('Greek Yogurt Parfait', 280, 22, 30, 4, '🥣')}
-                      className="bg-[#09090B] hover:bg-white/[0.08] text-[#FFFFFF] text-xs px-3.5 py-2 rounded-full border border-white/[0.08] transition-colors"
-                    >
-                      + 🥣 Yogurt Parfait
-                    </button>
-                    <button
-                      onClick={() => handleAddQuickMeal('Whey Protein Shake', 220, 30, 8, 3, '🥤')}
-                      className="bg-[#09090B] hover:bg-white/[0.08] text-[#FFFFFF] text-xs px-3.5 py-2 rounded-full border border-white/[0.08] transition-colors"
-                    >
-                      + 🥤 Protein Shake
-                    </button>
-                    <button
-                      onClick={() => handleAddQuickMeal('Handful Almonds', 160, 6, 6, 14, '🥜')}
-                      className="bg-[#09090B] hover:bg-white/[0.08] text-[#FFFFFF] text-xs px-3.5 py-2 rounded-full border border-white/[0.08] transition-colors"
-                    >
-                      + 🥜 Almonds
-                    </button>
-                  </div>
-
-                  {/* Meal Feed */}
-                  <div className="space-y-2 max-h-36 overflow-y-auto">
-                    {loggedMeals.map((meal, idx) => (
-                      <div key={idx} className="flex items-center justify-between bg-[#09090B] border border-white/[0.08] p-3 rounded-[12px] text-xs">
-                        <div className="flex items-center gap-2.5">
-                          <span>{meal.icon}</span>
-                          <div>
-                            <p className="font-medium text-[#FFFFFF] truncate max-w-[130px]">{meal.name}</p>
-                            <p className="text-[10px] text-[#A1A1AA]">{meal.time}</p>
-                          </div>
-                        </div>
-                        <span className="font-bold text-[#34D399]">{meal.cals} kcal</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-white/[0.08] flex items-center justify-between text-[13px] text-[#A1A1AA]">
-                  <span>Journal Sync</span>
-                  <button onClick={() => router.push('/diary')} className="text-[#34D399] font-medium hover:underline">Open Diary →</button>
-                </div>
-              </div>
-
-              {/* CARD 4: Water Tracker (4 Columns) */}
-              <div className="col-span-12 md:col-span-4 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 group flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <span className="text-[13px] font-medium uppercase tracking-wider text-blue-400">Widget 04</span>
-                      <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1">Water Tracker</h3>
-                    </div>
-                    <span className="text-[13px] font-bold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-                      {waterGlasses * 250}ml / 2,500ml
-                    </span>
-                  </div>
-
-                  <div className="bg-[#09090B] border border-white/[0.08] rounded-[16px] p-5 mb-4">
-                    <p className="text-[13px] text-[#A1A1AA] mb-4">Tap glasses to log hydration:</p>
-                    <div className="grid grid-cols-5 gap-2.5 text-center">
-                      {Array.from({ length: 10 }).map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setWaterGlasses(idx + 1)}
-                          className={`h-11 rounded-[12px] flex items-center justify-center text-sm transition-all ${
-                            idx < waterGlasses
-                              ? 'bg-blue-500 text-[#09090B] font-bold shadow-lg shadow-blue-500/20 scale-100'
-                              : 'bg-[#111113] text-[#A1A1AA] hover:bg-white/[0.08]'
-                          }`}
-                        >
-                          💧
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6 pt-4 border-t border-white/[0.08] flex items-center justify-between text-[13px] text-[#A1A1AA]">
-                  <span>Hydration Goal</span>
-                  <button onClick={() => router.push('/dashboard')} className="text-blue-400 font-medium hover:underline">Log Water →</button>
-                </div>
-              </div>
-
-              {/* CARD 5: 7-Day Calorie Progress Analytics (4 Columns) */}
-              <div className="col-span-12 md:col-span-4 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 group flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-start mb-6">
-                    <div>
-                      <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">Widget 05</span>
-                      <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1">Weekly Analytics</h3>
-                    </div>
-                    <span className="text-[13px] font-bold text-[#22D3EE] bg-[#22D3EE]/10 px-3 py-1 rounded-full border border-[#22D3EE]/20">
-                      7-Day Streak
-                    </span>
-                  </div>
-
+                  <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">7-Day Historical Trend</span>
+                  <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1 mb-6">Weekly Progress</h3>
+                  
                   <div className="bg-[#09090B] border border-white/[0.08] rounded-[16px] p-4 h-48 flex items-end justify-between gap-2.5">
                     {weeklyChartBars.map((bar, idx) => (
                       <div key={idx} className="flex-1 h-full flex flex-col justify-end items-center gap-1.5 group/bar">
@@ -542,10 +319,93 @@ export default function LandingPage() {
                     ))}
                   </div>
                 </div>
+                <div className="mt-6 pt-4 border-t border-white/[0.08] flex justify-between items-center text-[13px] text-[#A1A1AA]">
+                  <span>Avg: 1,950 kcal / day</span>
+                  <button onClick={() => router.push('/progress')} className="text-[#22D3EE] font-medium hover:underline">Analytics →</button>
+                </div>
+              </div>
 
-                <div className="mt-6 pt-4 border-t border-white/[0.08] flex items-center justify-between text-[13px] text-[#A1A1AA]">
-                  <span>Deficit / Surplus Reports</span>
-                  <button onClick={() => router.push('/progress')} className="text-[#22D3EE] font-medium hover:underline">Full Trends →</button>
+              <div className="col-span-12 md:col-span-4 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <span className="text-[13px] font-medium uppercase tracking-wider text-blue-400">Smart Hydration</span>
+                  <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1 mb-4">Water Tracker</h3>
+                  
+                  <div className="bg-[#09090B] border border-white/[0.08] p-4 rounded-[16px] text-center mb-4">
+                    <p className="text-[30px] font-bold text-white mb-2">{waterGlasses * 250}ml <span className="text-xs font-normal text-[#A1A1AA]">/ 2,500ml</span></p>
+                    <div className="grid grid-cols-5 gap-2">
+                      {Array.from({ length: 10 }).map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setWaterGlasses(idx + 1)}
+                          className={`h-9 rounded-[8px] flex items-center justify-center text-xs transition-all ${
+                            idx < waterGlasses
+                              ? 'bg-blue-500 text-[#09090B] font-bold'
+                              : 'bg-[#111113] text-[#A1A1AA] hover:bg-white/[0.08]'
+                          }`}
+                        >
+                          💧
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-white/[0.08] flex justify-between items-center text-[13px] text-[#A1A1AA]">
+                  <span>10 Glasses Target</span>
+                  <button onClick={() => router.push('/dashboard')} className="text-blue-400 font-medium hover:underline">Log Water →</button>
+                </div>
+              </div>
+
+              {/* BOTTOM ROW: Protein Ring (5 Cols) | Today's Meals (7 Cols) */}
+              <div className="col-span-12 md:col-span-5 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <span className="text-[13px] font-medium uppercase tracking-wider text-[#34D399]">Macronutrient Progress</span>
+                  <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1 mb-4">Protein Ring</h3>
+                  
+                  <div className="bg-[#09090B] border border-white/[0.08] p-5 rounded-[16px] space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[14px] text-white font-medium">Protein Target</span>
+                      <span className="text-[18px] font-bold text-[#34D399]">95g / 130g</span>
+                    </div>
+                    <div className="w-full bg-[#111113] h-2.5 rounded-full overflow-hidden">
+                      <div className="bg-[#34D399] h-full w-[73%]" />
+                    </div>
+                    <p className="text-xs text-[#A1A1AA]">35g remaining to reach daily recovery target</p>
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-white/[0.08] flex justify-between items-center text-[13px] text-[#A1A1AA]">
+                  <span>Macro Goal</span>
+                  <button onClick={() => router.push('/goals')} className="text-[#34D399] font-medium hover:underline">Edit Targets →</button>
+                </div>
+              </div>
+
+              <div className="col-span-12 md:col-span-7 bg-[#111113] border border-white/[0.08] rounded-[20px] p-8 shadow-2xl hover:border-[#22D3EE]/40 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div className="flex justify-between items-center mb-4">
+                    <div>
+                      <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">Food Journal</span>
+                      <h3 className="text-[18px] font-medium text-[#FFFFFF] mt-1">Today&apos;s Meals</h3>
+                    </div>
+                    <span className="text-xs text-[#A1A1AA]">{loggedMeals.length} items logged</span>
+                  </div>
+
+                  <div className="space-y-2.5 max-h-44 overflow-y-auto">
+                    {loggedMeals.map((meal, idx) => (
+                      <div key={idx} className="flex items-center justify-between bg-[#09090B] border border-white/[0.08] p-3 rounded-[12px] text-xs">
+                        <div className="flex items-center gap-3">
+                          <span className="text-base">{meal.icon}</span>
+                          <div>
+                            <p className="font-semibold text-[#FFFFFF]">{meal.name}</p>
+                            <p className="text-[10px] text-[#A1A1AA]">{meal.time} · {meal.protein}g protein</p>
+                          </div>
+                        </div>
+                        <span className="font-bold text-[#34D399] text-sm">{meal.cals} kcal</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-white/[0.08] flex justify-between items-center text-[13px] text-[#A1A1AA]">
+                  <span>Instant Logging Engine</span>
+                  <button onClick={() => router.push('/diary')} className="text-[#22D3EE] font-medium hover:underline">Open Journal →</button>
                 </div>
               </div>
 
@@ -554,125 +414,130 @@ export default function LandingPage() {
         </section>
 
         {/* ---------------------------------------------------- */}
-        {/* 21st.dev STYLE HIGH-CONTRAST FEATURE PROMPT BLOCKS */}
+        {/* SUBTITLE DIVIDER: Built for modern nutrition.       */}
         {/* ---------------------------------------------------- */}
-        <section id="features" className="py-24 border-t border-white/[0.08]">
+        <section className="py-16 text-center border-t border-white/[0.08]">
           <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-            <h2 className="text-3xl md:text-[44px] font-semibold text-[#FFFFFF] tracking-tight mb-4">
-              Engineered for absolute clarity.
+            <h2 className="text-3xl md:text-[44px] font-semibold text-[#FFFFFF] tracking-tight">
+              Built for modern nutrition.
             </h2>
-            <p className="text-[18px] text-[#A1A1AA] leading-[1.6] max-w-xl mb-12">
-              Three intelligent core pillars built into a single, seamless operating system.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              
-              {/* Block 1 */}
-              <div className="flex min-h-[420px] flex-col justify-between rounded-[20px] bg-[#111113] border border-white/[0.08] p-8 hover:border-[#22D3EE]/40 transition-all duration-300">
-                <div>
-                  <div className="inline-flex items-center rounded-full bg-[#22D3EE]/10 border border-[#22D3EE]/30 px-3.5 py-1 text-[13px] font-medium text-[#22D3EE] mb-6">
-                    01 • VISION RECOGNITION
-                  </div>
-                  <h3 className="text-[40px] font-bold text-[#FFFFFF] tracking-tight leading-none mb-4">Snap &amp; Log</h3>
-                  <p className="text-[18px] text-[#A1A1AA] leading-[1.6]">
-                    Point your camera at any meal. Nourish AI breaks down ingredients, portions, and macros in under 1 second.
-                  </p>
-                </div>
-                <div className="pt-6 border-t border-white/[0.08] text-[13px] font-medium text-[#22D3EE]">
-                  AI Vision Pipeline →
-                </div>
-              </div>
-
-              {/* Block 2 */}
-              <div className="flex min-h-[420px] flex-col justify-between rounded-[20px] bg-[#111113] border border-white/[0.08] p-8 hover:border-[#34D399]/40 transition-all duration-300">
-                <div>
-                  <div className="inline-flex items-center rounded-full bg-[#34D399]/10 border border-[#34D399]/30 px-3.5 py-1 text-[13px] font-medium text-[#34D399] mb-6">
-                    02 • EDGE STREAMING
-                  </div>
-                  <h3 className="text-[40px] font-bold text-[#FFFFFF] tracking-tight leading-none mb-4">Data-Aware AI</h3>
-                  <p className="text-[18px] text-[#A1A1AA] leading-[1.6]">
-                    Direct connection to your calorie intake. Receive intelligent dinner recommendations that match your macro deficit.
-                  </p>
-                </div>
-                <div className="pt-6 border-t border-white/[0.08] text-[13px] font-medium text-[#34D399]">
-                  Real-time Stream Engine →
-                </div>
-              </div>
-
-              {/* Block 3 */}
-              <div className="flex min-h-[420px] flex-col justify-between rounded-[20px] bg-[#111113] border border-white/[0.08] p-8 hover:border-[#FACC15]/40 transition-all duration-300">
-                <div>
-                  <div className="inline-flex items-center rounded-full bg-[#FACC15]/10 border border-[#FACC15]/30 px-3.5 py-1 text-[13px] font-medium text-[#FACC15] mb-6">
-                    03 • DYNAMIC HABITS
-                  </div>
-                  <h3 className="text-[40px] font-bold text-[#FFFFFF] tracking-tight leading-none mb-4">Habits That Stay</h3>
-                  <p className="text-[18px] text-[#A1A1AA] leading-[1.6]">
-                    Build lasting daily streaks, unlock achievement badges, and hit water targets with zero guilt or judgment.
-                  </p>
-                </div>
-                <div className="pt-6 border-t border-white/[0.08] text-[13px] font-medium text-[#FACC15]">
-                  Habit Loop Engine →
-                </div>
-              </div>
-
-            </div>
           </div>
         </section>
 
         {/* ---------------------------------------------------- */}
-        {/* FINAL CTA BANNER SECTION */}
+        {/* 4-COLUMN FEATURE GRID */}
+        {/* 🥗 Instant Food Recognition                         */}
+        {/* 📈 Adaptive AI Coaching                              */}
+        {/* 📊 Live Analytics                                    */}
+        {/* 💧 Smart Hydration                                   */}
         {/* ---------------------------------------------------- */}
-        <section className="py-24 border-t border-white/[0.08]">
-          <div className="max-w-[1280px] mx-auto px-6 md:px-8">
-            <div className="rounded-[20px] border border-white/[0.08] bg-[#111113] p-12 md:p-20 text-center shadow-2xl relative overflow-hidden">
-              <div className="max-w-2xl mx-auto space-y-8">
-                <h2 className="text-3xl md:text-[44px] font-semibold text-[#FFFFFF] tracking-tight leading-tight">
-                  Start your journey to health clarity today.
-                </h2>
-                <p className="text-[18px] text-[#A1A1AA] leading-[1.6]">
-                  Join 15,000+ builders tracking less and knowing more with Nourish OS.
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-                  <button
-                    onClick={() => router.push('/dashboard')}
-                    className="w-full sm:w-auto h-12 inline-flex items-center justify-center rounded-full bg-[#22D3EE] px-8 text-sm font-bold text-[#09090B] hover:bg-[#34D399] transition-all duration-300 shadow-[0_0_25px_rgba(34,211,238,0.3)] active:scale-95"
-                  >
-                    Start Free Trial →
-                  </button>
-                  <button
-                    onClick={() => router.push('/dashboard')}
-                    className="w-full sm:w-auto h-12 inline-flex items-center justify-center rounded-full border border-white/[0.08] bg-[#09090B] px-8 text-sm font-semibold text-[#FFFFFF] hover:bg-white/[0.08] transition-all duration-300 active:scale-95"
-                  >
-                    Explore Interactive OS
-                  </button>
-                </div>
-              </div>
+        <section className="pb-24 max-w-[1280px] mx-auto px-6 md:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <div className="bg-[#111113] border border-white/[0.08] rounded-[20px] p-6 hover:border-[#22D3EE]/40 transition-all">
+              <div className="text-3xl mb-3">🥗</div>
+              <h3 className="text-[18px] font-medium text-[#FFFFFF] mb-2">Instant Food Recognition</h3>
+              <p className="text-[14px] text-[#A1A1AA] leading-relaxed">
+                Snap a photo or search ingredients to calculate exact calories and macros automatically.
+              </p>
             </div>
+
+            <div className="bg-[#111113] border border-white/[0.08] rounded-[20px] p-6 hover:border-[#34D399]/40 transition-all">
+              <div className="text-3xl mb-3">📈</div>
+              <h3 className="text-[18px] font-medium text-[#FFFFFF] mb-2">Adaptive AI Coaching</h3>
+              <p className="text-[14px] text-[#A1A1AA] leading-relaxed">
+                Real-time recommendations that evaluate your current intake and adjust to your targets.
+              </p>
+            </div>
+
+            <div className="bg-[#111113] border border-white/[0.08] rounded-[20px] p-6 hover:border-[#FACC15]/40 transition-all">
+              <div className="text-3xl mb-3">📊</div>
+              <h3 className="text-[18px] font-medium text-[#FFFFFF] mb-2">Live Analytics</h3>
+              <p className="text-[14px] text-[#A1A1AA] leading-relaxed">
+                7-day intake trends, macro distribution, and deficit calculation with visual bar graphs.
+              </p>
+            </div>
+
+            <div className="bg-[#111113] border border-white/[0.08] rounded-[20px] p-6 hover:border-blue-400/40 transition-all">
+              <div className="text-3xl mb-3">💧</div>
+              <h3 className="text-[18px] font-medium text-[#FFFFFF] mb-2">Smart Hydration</h3>
+              <p className="text-[14px] text-[#A1A1AA] leading-relaxed">
+                Glass-by-glass water tracking with smart alerts to keep your hydration right on goal.
+              </p>
+            </div>
+
           </div>
         </section>
+
       </main>
 
-      {/* 21st.dev Style Minimal Footer */}
-      <footer className="border-t border-white/[0.08] bg-[#09090B] py-12">
-        <div className="max-w-[1280px] mx-auto px-6 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-[13px] text-[#A1A1AA]">
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-xl bg-[#22D3EE] text-[#09090B] font-bold flex items-center justify-center text-xs">
-              ✦
+      {/* ---------------------------------------------------- */}
+      {/* FOOTER SECTION */}
+      {/* Brand: Nourish AI                                    */}
+      {/* Columns: Product | Resources | Pricing | Docs | Github*/}
+      {/* ©2026 Nourish AI                                     */}
+      {/* ---------------------------------------------------- */}
+      <footer className="border-t border-white/[0.08] bg-[#09090B] py-16">
+        <div className="max-w-[1280px] mx-auto px-6 md:px-8 space-y-12">
+          
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
+            {/* Brand Column */}
+            <div className="col-span-2 space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-xl bg-[#22D3EE] text-[#09090B] font-bold flex items-center justify-center text-xs">
+                  ✦
+                </div>
+                <span className="font-bold text-lg text-[#FFFFFF]">Nourish AI</span>
+              </div>
+              <p className="text-[14px] text-[#A1A1AA] max-w-xs leading-relaxed">
+                The operating system for your nutrition. Intelligence for your metabolism.
+              </p>
             </div>
-            <span className="font-bold text-sm text-[#FFFFFF]">Nourish.os</span>
+
+            {/* Links Columns */}
+            <div>
+              <p className="text-[13px] font-medium uppercase tracking-wider text-[#FFFFFF] mb-4">Product</p>
+              <ul className="space-y-2 text-[14px] text-[#A1A1AA]">
+                <li><Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link></li>
+                <li><Link href="/diary" className="hover:text-white transition-colors">Food Journal</Link></li>
+                <li><Link href="/coach" className="hover:text-white transition-colors">AI Coach</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-[13px] font-medium uppercase tracking-wider text-[#FFFFFF] mb-4">Resources</p>
+              <ul className="space-y-2 text-[14px] text-[#A1A1AA]">
+                <li><Link href="/progress" className="hover:text-white transition-colors">Analytics</Link></li>
+                <li><Link href="/goals" className="hover:text-white transition-colors">Goals</Link></li>
+                <li><Link href="/settings" className="hover:text-white transition-colors">Settings</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-[13px] font-medium uppercase tracking-wider text-[#FFFFFF] mb-4">Pricing</p>
+              <ul className="space-y-2 text-[14px] text-[#A1A1AA]">
+                <li><a href="#pricing" className="hover:text-white transition-colors">Free Plan</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">Pro OS</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-[13px] font-medium uppercase tracking-wider text-[#FFFFFF] mb-4">Docs &amp; Code</p>
+              <ul className="space-y-2 text-[14px] text-[#A1A1AA]">
+                <li><a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Docs</a></li>
+                <li><a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">Github</a></li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex gap-8 font-medium">
-            <Link href="/dashboard" className="hover:text-[#FFFFFF] transition-colors">Dashboard</Link>
-            <Link href="/diary" className="hover:text-[#FFFFFF] transition-colors">Food Journal</Link>
-            <Link href="/coach" className="hover:text-[#FFFFFF] transition-colors">AI Coach</Link>
-            <Link href="/goals" className="hover:text-[#FFFFFF] transition-colors">Goals</Link>
-            <Link href="/progress" className="hover:text-[#FFFFFF] transition-colors">Progress</Link>
-            <Link href="/settings" className="hover:text-[#FFFFFF] transition-colors">Settings</Link>
+          <div className="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row justify-between items-center text-[13px] text-[#A1A1AA] gap-4">
+            <p>©2026 Nourish AI. All rights reserved.</p>
+            <div className="flex gap-6">
+              <a href="#" className="hover:text-white transition-colors">Privacy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms</a>
+              <a href="#" className="hover:text-white transition-colors">Security</a>
+            </div>
           </div>
-
-          <p>© {new Date().getFullYear()} Nourish OS. Engineered for clarity.</p>
         </div>
       </footer>
     </div>
