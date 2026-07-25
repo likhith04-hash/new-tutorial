@@ -1,5 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Hanken+Grotesk:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-geist: 'Geist', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+  --color-os-bg: #09090B;
+  --color-os-[#09090B]: #09090B;
+  --color-os-surface: #111113;
+  --color-os-[#111113]: #111113;
+  --color-os-border: rgba(255, 255, 255, 0.08);
+  --color-os-cyan: #22D3EE;
+  --color-os-emerald: #34D399;
+  --color-os-warning: #FACC15;
+  --color-os-text: #FFFFFF;
+  --color-os-muted: #A1A1AA;
+}
 
 @theme {
   --color-primary: #163826;
