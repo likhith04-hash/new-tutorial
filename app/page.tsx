@@ -42,361 +42,420 @@ export default function LandingPage() {
   }
 
   const weeklyChartBars = [
-    { day: 'S', heightPct: 65, cals: '1,820', color: 'bg-primary-fixed-dim' },
-    { day: 'M', heightPct: 85, cals: '2,050', color: 'bg-primary-fixed-dim' },
-    { day: 'T', heightPct: 100, cals: '2,100', color: 'bg-secondary-container' },
-    { day: 'W', heightPct: 75, cals: '1,910', color: 'bg-primary-fixed-dim' },
-    { day: 'T', heightPct: 90, cals: '2,080', color: 'bg-primary-fixed-dim' },
-    { day: 'F', heightPct: 60, cals: '1,750', color: 'bg-primary-fixed-dim' },
-    { day: 'S', heightPct: 45, cals: '1,500', color: 'bg-tertiary-fixed' },
+    { day: 'S', heightPct: 65, cals: '1,820 kcal', color: 'bg-emerald-500' },
+    { day: 'M', heightPct: 85, cals: '2,050 kcal', color: 'bg-emerald-500' },
+    { day: 'T', heightPct: 100, cals: '2,100 kcal', color: 'bg-amber-400' },
+    { day: 'W', heightPct: 75, cals: '1,910 kcal', color: 'bg-emerald-500' },
+    { day: 'T', heightPct: 90, cals: '2,080 kcal', color: 'bg-emerald-500' },
+    { day: 'F', heightPct: 60, cals: '1,750 kcal', color: 'bg-emerald-500' },
+    { day: 'S', heightPct: 45, cals: '1,500 kcal', color: 'bg-rose-400' },
   ]
 
   return (
-    <div className="bg-background text-on-surface font-body-md antialiased min-h-screen">
-      {/* Font & Icon Dependencies */}
+    <div className="bg-[#0b1712] text-slate-100 antialiased min-h-screen selection:bg-emerald-500 selection:text-white">
+      {/* Google Fonts */}
       <link
-        href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Hanken+Grotesk:wght@100..900&display=swap"
-        rel="stylesheet"
-      />
-      <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
         rel="stylesheet"
       />
 
       <style jsx global>{`
-        .protein-accent { color: #D97B54; }
-        .carbs-accent { color: #E8C170; }
-        .fat-accent { color: #436651; }
-        .glass-card {
-          background: rgba(255, 255, 255, 0.6);
-          backdrop-filter: blur(8px);
-          border: 1px solid rgba(22, 56, 38, 0.1);
+        body {
+          font-family: 'DM Sans', sans-serif;
+          background-color: #0b1712;
         }
-        .material-symbols-outlined {
-          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        .font-serif-title {
+          font-family: 'Playfair Display', serif;
+        }
+        .emerald-glow {
+          background: radial-gradient(circle at 50% 0%, rgba(52, 211, 153, 0.15), transparent 70%);
         }
       `}</style>
 
-      {/* TopNavBar */}
-      <header className="docked full-width top-0 sticky backdrop-blur-md bg-surface/90 border-b border-outline-variant z-50">
-        <nav className="flex justify-between items-center w-full px-container-margin py-4 max-w-7xl mx-auto">
-          <Link href="/" className="text-headline-md font-headline-md font-bold text-primary">
-            Nourish
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#0b1712]/80 border-b border-emerald-900/40">
+        <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white font-serif-title font-bold text-xl shadow-lg shadow-emerald-900/30 group-hover:scale-105 transition-transform">
+              n
+            </div>
+            <span className="font-serif-title font-bold text-2xl tracking-tight text-white">
+              Nourish<span className="text-emerald-400">.ai</span>
+            </span>
           </Link>
-          <div className="hidden md:flex gap-8 items-center">
-            <a className="text-on-surface-variant hover:text-primary transition-all duration-200 text-label-caps font-label-caps uppercase" href="#how-it-works">
-              How it works
-            </a>
-            <a className="text-on-surface-variant hover:text-primary transition-all duration-200 text-label-caps font-label-caps uppercase" href="#features">
-              Features
-            </a>
-            <a className="text-on-surface-variant hover:text-primary transition-all duration-200 text-label-caps font-label-caps uppercase" href="#coach">
-              AI Coach
-            </a>
+
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+            <a href="#how-it-works" className="hover:text-emerald-400 transition-colors">How it works</a>
+            <a href="#features" className="hover:text-emerald-400 transition-colors">Features</a>
+            <a href="#coach" className="hover:text-emerald-400 transition-colors">AI Coach</a>
+            <a href="#trends" className="hover:text-emerald-400 transition-colors">Trends</a>
           </div>
+
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push('/dashboard')}
-              className="hidden md:block text-label-caps font-label-caps uppercase text-primary hover:opacity-80 transition-all font-bold"
+              className="hidden sm:block text-sm font-semibold text-slate-300 hover:text-white transition-colors"
             >
               Sign In
             </button>
             <button
               onClick={() => router.push('/dashboard')}
-              className="bg-primary text-on-primary px-6 py-2.5 rounded-xl text-label-caps font-label-caps uppercase hover:opacity-90 transition-all scale-100 active:scale-95 shadow-md font-bold"
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:from-emerald-400 hover:to-teal-500 transition-all shadow-lg shadow-emerald-950/50 active:scale-95"
             >
-              Get started
+              Launch App
             </button>
           </div>
         </nav>
       </header>
 
-      <main>
-        {/* 1. HERO SECTION WITH FIXED SPACING & NO OVERLAP */}
-        <section className="max-w-7xl mx-auto px-container-margin pt-12 pb-24 md:pt-20 md:pb-32 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8 animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
-            <h1 className="text-display-lg font-display-lg text-primary">
-              Track less.<br />Know more.
+      <main className="relative overflow-hidden">
+        {/* Ambient Glows */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] emerald-glow pointer-events-none" />
+
+        {/* Hero Section */}
+        <section className="max-w-7xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-36 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+          <div className="lg:col-span-6 space-y-8 animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-300 text-xs font-semibold tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              PROACTIVE AI NUTRITION COACHING
+            </div>
+
+            <h1 className="text-4xl sm:text-6xl font-bold font-serif-title text-white leading-[1.1] tracking-tight">
+              Track less.<br />
+              Eat better.<br />
+              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
+                Know more.
+              </span>
             </h1>
-            <p className="text-body-lg text-on-surface-variant max-w-lg">
-              Turn your meals, water intake, and daily activity into a clear picture of your health. No guesswork, just intelligent insights designed for your body.
+
+            <p className="text-lg text-slate-300 max-w-xl leading-relaxed">
+              Nourish turns every meal, glass of water, and habit into clear, intelligent insights tailored to your body — no spreadsheets, no guesswork, no guilt.
             </p>
+
             <form onSubmit={handleStartTracking} className="flex flex-col sm:flex-row gap-3 max-w-md">
               <input
-                className="flex-1 rounded-xl border border-outline-variant bg-surface-container-lowest px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                placeholder="Enter your email"
                 type="email"
+                placeholder="Enter your email address"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
+                className="flex-1 bg-[#13261e] border border-emerald-800/60 rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all"
               />
               <button
                 type="submit"
-                className="bg-secondary text-on-secondary px-6 py-3 rounded-xl font-label-caps text-label-caps uppercase hover:opacity-90 transition-all shadow-md font-bold"
+                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-orange-950/50 active:scale-95 whitespace-nowrap"
               >
-                Start tracking free
+                Start Free Trial
               </button>
             </form>
-            <div className="flex items-center gap-4 text-on-surface-variant text-body-md italic">
-              <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                verified
+
+            <div className="flex items-center gap-6 pt-2 text-xs font-medium text-slate-400">
+              <span className="flex items-center gap-1.5 text-emerald-400">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                No credit card required
               </span>
-              &ldquo;The only app that actually understands my metabolism.&rdquo;
+              <span className="flex items-center gap-1.5 text-emerald-400">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                Instant setup
+              </span>
             </div>
           </div>
 
-          {/* Hero Mockup (Bento Style) */}
-          <div className="relative mb-6 md:mb-0 animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
-            <div className="bg-primary-container rounded-[2rem] p-8 text-on-primary shadow-xl border border-primary/10">
-              <div className="flex justify-between items-start mb-12">
+          {/* Hero App Mockup Card */}
+          <div className="lg:col-span-6 relative animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
+            <div className="bg-[#142920] border border-emerald-700/40 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-emerald-950/80 relative">
+              {/* Header */}
+              <div className="flex justify-between items-start mb-8 border-b border-emerald-900/50 pb-6">
                 <div>
-                  <p className="text-label-caps font-label-caps uppercase opacity-70 mb-2">Daily Calorie Target</p>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-display-lg font-display-lg">1,187</span>
-                    <span className="text-headline-md opacity-60">/ 2,100 kcal</span>
+                  <span className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">Today&apos;s Calorie Target</span>
+                  <div className="flex items-baseline gap-2 mt-1">
+                    <span className="text-4xl font-bold font-serif-title text-white">1,187</span>
+                    <span className="text-slate-400 text-sm">/ 2,100 kcal</span>
                   </div>
                 </div>
-                <div className="h-20 w-20 relative">
-                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="rgba(255,255,255,0.1)"
-                      strokeWidth="3"
-                    />
-                    <path
-                      className="text-secondary-container"
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeDasharray="56, 100"
-                      strokeWidth="3"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-label-caps text-[10px] uppercase">Goal</span>
-                    <span className="font-bold">56%</span>
+                <div className="w-16 h-16 rounded-full bg-emerald-950 border border-emerald-500/30 flex flex-col items-center justify-center text-center">
+                  <span className="text-[10px] text-emerald-400 uppercase font-semibold">Goal</span>
+                  <span className="text-sm font-bold text-white">56%</span>
+                </div>
+              </div>
+
+              {/* Macros Breakdown */}
+              <div className="grid grid-cols-3 gap-3 mb-6">
+                <div className="bg-[#1a3429] border border-emerald-800/40 rounded-2xl p-3.5">
+                  <span className="text-[10px] uppercase font-bold text-orange-400 tracking-wider">Protein</span>
+                  <p className="text-xl font-bold text-white mt-1">85g</p>
+                  <div className="w-full bg-emerald-950 h-1.5 rounded-full mt-2 overflow-hidden">
+                    <div className="bg-orange-500 h-full w-[65%]" />
+                  </div>
+                </div>
+                <div className="bg-[#1a3429] border border-emerald-800/40 rounded-2xl p-3.5">
+                  <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider">Carbs</span>
+                  <p className="text-xl font-bold text-white mt-1">140g</p>
+                  <div className="w-full bg-emerald-950 h-1.5 rounded-full mt-2 overflow-hidden">
+                    <div className="bg-amber-400 h-full w-[58%]" />
+                  </div>
+                </div>
+                <div className="bg-[#1a3429] border border-emerald-800/40 rounded-2xl p-3.5">
+                  <span className="text-[10px] uppercase font-bold text-teal-400 tracking-wider">Fat</span>
+                  <p className="text-xl font-bold text-white mt-1">42g</p>
+                  <div className="w-full bg-emerald-950 h-1.5 rounded-full mt-2 overflow-hidden">
+                    <div className="bg-teal-400 h-full w-[60%]" />
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="bg-white/10 rounded-xl p-4 border border-white/5 backdrop-blur-sm">
-                  <p className="text-[10px] font-label-caps uppercase mb-2">Protein</p>
-                  <p className="text-data-lg font-data-lg protein-accent">85g</p>
-                  <div className="w-full h-1 bg-white/10 rounded-full mt-3 overflow-hidden">
-                    <div className="w-[65%] h-full bg-secondary-container"></div>
-                  </div>
+
+              {/* Proactive AI Nudge Banner */}
+              <div className="bg-gradient-to-r from-emerald-950 via-[#18362b] to-emerald-950 border border-emerald-500/30 rounded-2xl p-4 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 font-bold text-lg">
+                  ✦
                 </div>
-                <div className="bg-white/10 rounded-xl p-4 border border-white/5 backdrop-blur-sm">
-                  <p className="text-[10px] font-label-caps uppercase mb-2">Carbs</p>
-                  <p className="text-data-lg font-data-lg carbs-accent">140g</p>
-                  <div className="w-full h-1 bg-white/10 rounded-full mt-3 overflow-hidden">
-                    <div className="w-[58%] h-full bg-tertiary-fixed"></div>
-                  </div>
+                <div className="flex-1">
+                  <p className="text-xs font-semibold text-emerald-300">Proactive AI Nudge</p>
+                  <p className="text-xs text-slate-300 mt-0.5">&ldquo;You&apos;re 900 kcal under target with dinner ahead — want a high-protein suggestion?&rdquo;</p>
                 </div>
-                <div className="bg-white/10 rounded-xl p-4 border border-white/5 backdrop-blur-sm">
-                  <p className="text-[10px] font-label-caps uppercase mb-2">Fat</p>
-                  <p className="text-data-lg font-data-lg fat-accent">42g</p>
-                  <div className="w-full h-1 bg-white/10 rounded-full mt-3 overflow-hidden">
-                    <div className="w-[60%] h-full bg-primary-fixed-dim"></div>
-                  </div>
-                </div>
+                <button
+                  onClick={() => router.push('/coach?prompt=Suggest%20a%20high-protein%20dinner')}
+                  className="bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-400 transition-colors whitespace-nowrap"
+                >
+                  Ask Coach
+                </button>
               </div>
             </div>
 
             {/* Floating Hydration Widget */}
-            <div className="absolute -bottom-5 left-4 md:-bottom-6 md:-left-6 bg-surface border border-outline-variant rounded-2xl p-4 flex items-center gap-3 shadow-lg z-10">
-              <div className="bg-blue-100 p-2 rounded-lg text-blue-600">
-                <span className="material-symbols-outlined">water_drop</span>
+            <div className="absolute -bottom-6 -left-4 sm:-left-6 bg-[#162f25] border border-emerald-600/40 rounded-2xl p-4 flex items-center gap-3 shadow-xl z-20">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl font-bold">
+                💧
               </div>
               <div>
-                <p className="text-label-caps font-label-caps uppercase text-[10px]">Hydration</p>
-                <p className="font-bold text-on-surface">1.8L <span className="text-on-surface-variant font-normal">/ 2.5L</span></p>
+                <p className="text-[10px] font-bold text-sky-400 uppercase tracking-wider">Hydration Goal</p>
+                <p className="text-sm font-bold text-white">1.8L <span className="text-slate-400 font-normal">/ 2.5L</span></p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 2. HOW IT WORKS SECTION WITH STRUCTURED STEP CARDS */}
-        <section id="how-it-works" className="bg-surface-container-low py-24 border-t border-outline-variant/60">
-          <div className="max-w-7xl mx-auto px-container-margin animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
-            <div className="text-center mb-16">
-              <h2 className="text-headline-lg font-headline-lg text-primary mb-4">How it works</h2>
-              <p className="text-on-surface-variant text-body-lg">Three simple steps to mastery.</p>
+        {/* How It Works Section */}
+        <section id="how-it-works" className="py-24 bg-[#0d1d17] border-t border-emerald-900/40 relative">
+          <div className="max-w-7xl mx-auto px-6 animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
+            <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+              <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-emerald-950/80 px-3.5 py-1.5 rounded-full border border-emerald-800/40">
+                Simple &amp; Frictionless
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-bold font-serif-title text-white">
+                Three steps. Every single day.
+              </h2>
+              <p className="text-slate-300 text-base">
+                Building healthy nutrition habits doesn&apos;t require hours of manual input.
+              </p>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Step 1 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl shadow-sm hover:border-primary transition-all flex flex-col h-full group">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                    <span className="material-symbols-outlined text-3xl">photo_camera</span>
+              <div className="bg-[#142920] border border-emerald-800/50 rounded-3xl p-8 hover:border-emerald-500/50 transition-all group flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-950 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-2xl shadow-lg group-hover:scale-110 transition-transform">
+                      📸
+                    </div>
+                    <span className="text-4xl font-bold font-serif-title text-emerald-800/60">01</span>
                   </div>
-                  <span className="text-display-lg font-display-lg text-primary/20 font-black">01</span>
+                  <h3 className="text-xl font-bold text-white mb-3">Snap or Search</h3>
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    Take a photo of your meal or tap a single preset. Nourish AI analyzes the food, estimates calories and macros, and lets you confirm with one tap.
+                  </p>
                 </div>
-                <h3 className="text-headline-md font-headline-md mb-3 text-primary">Log in seconds</h3>
-                <p className="text-on-surface-variant text-body-md leading-relaxed">
-                  Simply snap a photo of your meal or search our database. AI handles the complex calorie and macro breakdown for you.
-                </p>
+                <div className="mt-8 pt-4 border-t border-emerald-900/60 text-xs font-semibold text-emerald-400 flex items-center gap-1">
+                  <span>Photo &amp; Barcode Logging</span>
+                  <span>→</span>
+                </div>
               </div>
 
               {/* Step 2 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl shadow-sm hover:border-primary transition-all flex flex-col h-full group">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                    <span className="material-symbols-outlined text-3xl">psychology</span>
+              <div className="bg-[#142920] border border-emerald-800/50 rounded-3xl p-8 hover:border-emerald-500/50 transition-all group flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-950 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-2xl shadow-lg group-hover:scale-110 transition-transform">
+                      🤖
+                    </div>
+                    <span className="text-4xl font-bold font-serif-title text-emerald-800/60">02</span>
                   </div>
-                  <span className="text-display-lg font-display-lg text-primary/20 font-black">02</span>
+                  <h3 className="text-xl font-bold text-white mb-3">Proactive AI Insights</h3>
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    Your AI coach evaluates your real-time intake patterns and goal objective (Lose, Maintain, or Gain) to deliver timely, actionable suggestions.
+                  </p>
                 </div>
-                <h3 className="text-headline-md font-headline-md mb-3 text-primary">Get AI insights</h3>
-                <p className="text-on-surface-variant text-body-md leading-relaxed">
-                  Your personal coach analyzes your logging patterns, identifies deficiencies, and suggests real-time improvements.
-                </p>
+                <div className="mt-8 pt-4 border-t border-emerald-900/60 text-xs font-semibold text-emerald-400 flex items-center gap-1">
+                  <span>Goal-Aware Guidance</span>
+                  <span>→</span>
+                </div>
               </div>
 
               {/* Step 3 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl shadow-sm hover:border-primary transition-all flex flex-col h-full group">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 bg-primary text-on-primary rounded-2xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-                    <span className="material-symbols-outlined text-3xl">trending_up</span>
+              <div className="bg-[#142920] border border-emerald-800/50 rounded-3xl p-8 hover:border-emerald-500/50 transition-all group flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-950 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-2xl shadow-lg group-hover:scale-110 transition-transform">
+                      🔥
+                    </div>
+                    <span className="text-4xl font-bold font-serif-title text-emerald-800/60">03</span>
                   </div>
-                  <span className="text-display-lg font-display-lg text-primary/20 font-black">03</span>
+                  <h3 className="text-xl font-bold text-white mb-3">Build Lasting Habits</h3>
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    Dynamic logging streaks, hydration reminders, and weekly macro trend graphs keep you accountable without the guilt or judgment.
+                  </p>
                 </div>
-                <h3 className="text-headline-md font-headline-md mb-3 text-primary">Build the habit</h3>
-                <p className="text-on-surface-variant text-body-md leading-relaxed">
-                  Stay motivated with weekly streaks, trend reports, and hydration goals that adapt as your fitness level evolves.
-                </p>
+                <div className="mt-8 pt-4 border-t border-emerald-900/60 text-xs font-semibold text-emerald-400 flex items-center gap-1">
+                  <span>Dynamic Badges &amp; Streaks</span>
+                  <span>→</span>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Features Grid */}
-        <section id="features" className="py-24 max-w-7xl mx-auto px-container-margin">
+        {/* Features Showcase Grid */}
+        <section id="features" className="py-24 max-w-7xl mx-auto px-6">
           <div className="animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
-            <h2 className="text-headline-lg font-headline-lg text-primary mb-12 text-center">Everything you need</h2>
+            <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+              <h2 className="text-3xl sm:text-5xl font-bold font-serif-title text-white">
+                Everything you need to succeed
+              </h2>
+              <p className="text-slate-300 text-base">
+                Engineered for maximum speed, visual clarity, and real data privacy.
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Card 1 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl hover:border-primary transition-colors group shadow-sm hover:shadow-md">
-                <span className="material-symbols-outlined text-secondary mb-4 block text-3xl group-hover:scale-110 transition-transform">restaurant</span>
-                <h4 className="text-headline-md font-headline-md mb-3 text-primary">Smart food logging</h4>
-                <p className="text-on-surface-variant text-body-md">Advanced AI recognition makes adding ingredients or complex meals as easy as clicking a button.</p>
+              <div className="bg-[#12261e] border border-emerald-800/40 p-7 rounded-2xl hover:border-emerald-500/60 transition-all group">
+                <div className="text-3xl mb-4 group-hover:scale-110 transition-transform">🥗</div>
+                <h4 className="text-lg font-bold text-white mb-2">Smart Food Logging</h4>
+                <p className="text-slate-300 text-sm leading-relaxed">Instant meal search with single-tap preset chips, barcode estimates, and photo analysis.</p>
               </div>
-              {/* Card 2 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl hover:border-primary transition-colors group shadow-sm hover:shadow-md">
-                <span className="material-symbols-outlined text-secondary mb-4 block text-3xl group-hover:scale-110 transition-transform">analytics</span>
-                <h4 className="text-headline-md font-headline-md mb-3 text-primary">Calorie &amp; macro tracking</h4>
-                <p className="text-on-surface-variant text-body-md">Precision tracking of proteins, fats, and carbs with automated daily summaries and target adjustments.</p>
+
+              <div className="bg-[#12261e] border border-emerald-800/40 p-7 rounded-2xl hover:border-emerald-500/60 transition-all group">
+                <div className="text-3xl mb-4 group-hover:scale-110 transition-transform">📊</div>
+                <h4 className="text-lg font-bold text-white mb-2">Calorie &amp; Macro Ring Breakdown</h4>
+                <p className="text-slate-300 text-sm leading-relaxed">Track Protein, Carbs, and Fats against personalized targets calculated for your body.</p>
               </div>
-              {/* Card 3 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl hover:border-primary transition-colors group shadow-sm hover:shadow-md">
-                <span className="material-symbols-outlined text-secondary mb-4 block text-3xl group-hover:scale-110 transition-transform">water_drop</span>
-                <h4 className="text-headline-md font-headline-md mb-3 text-primary">Hydration tracking</h4>
-                <p className="text-on-surface-variant text-body-md">Customizable water goals with smart reminders to ensure you&apos;re performing at your absolute peak.</p>
+
+              <div className="bg-[#12261e] border border-emerald-800/40 p-7 rounded-2xl hover:border-emerald-500/60 transition-all group">
+                <div className="text-3xl mb-4 group-hover:scale-110 transition-transform">💧</div>
+                <h4 className="text-lg font-bold text-white mb-2">Hydration Glass Counter</h4>
+                <p className="text-slate-300 text-sm leading-relaxed">Log water intake glass-by-glass with automatic alerts when you fall behind your daily glass target.</p>
               </div>
-              {/* Card 4 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl hover:border-primary transition-colors group shadow-sm hover:shadow-md">
-                <span className="material-symbols-outlined text-secondary mb-4 block text-3xl group-hover:scale-110 transition-transform">chat</span>
-                <h4 className="text-headline-md font-headline-md mb-3 text-primary">AI nutrition coach</h4>
-                <p className="text-on-surface-variant text-body-md">A conversational partner that answers &ldquo;What should I eat?&rdquo; based on your specific daily progress.</p>
+
+              <div className="bg-[#12261e] border border-emerald-800/40 p-7 rounded-2xl hover:border-emerald-500/60 transition-all group">
+                <div className="text-3xl mb-4 group-hover:scale-110 transition-transform">💬</div>
+                <h4 className="text-lg font-bold text-white mb-2">Real-Time AI Streaming Coach</h4>
+                <p className="text-slate-300 text-sm leading-relaxed">Ask any nutrition question and receive instant streaming advice that understands your exact daily log.</p>
               </div>
-              {/* Card 5 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl hover:border-primary transition-colors group shadow-sm hover:shadow-md">
-                <span className="material-symbols-outlined text-secondary mb-4 block text-3xl group-hover:scale-110 transition-transform">auto_graph</span>
-                <h4 className="text-headline-md font-headline-md mb-3 text-primary">Trends &amp; streaks</h4>
-                <p className="text-on-surface-variant text-body-md">Visualize your journey with detailed weekly overviews and celebration of your consistency milestones.</p>
+
+              <div className="bg-[#12261e] border border-emerald-800/40 p-7 rounded-2xl hover:border-emerald-500/60 transition-all group">
+                <div className="text-3xl mb-4 group-hover:scale-110 transition-transform">📈</div>
+                <h4 className="text-lg font-bold text-white mb-2">Weekly Intake Analytics</h4>
+                <p className="text-slate-300 text-sm leading-relaxed">Interactive SVG charts showing 7-day intake averages and deficit/surplus trends over time.</p>
               </div>
-              {/* Card 6 */}
-              <div className="bg-white border border-outline-variant p-8 rounded-2xl hover:border-primary transition-colors group shadow-sm hover:shadow-md">
-                <span className="material-symbols-outlined text-secondary mb-4 block text-3xl group-hover:scale-110 transition-transform">track_changes</span>
-                <h4 className="text-headline-md font-headline-md mb-3 text-primary">Goals that adapt</h4>
-                <p className="text-on-surface-variant text-body-md">Whether you want to lose weight, gain muscle, or maintain, our engine recalibrates as you change.</p>
+
+              <div className="bg-[#12261e] border border-emerald-800/40 p-7 rounded-2xl hover:border-emerald-500/60 transition-all group">
+                <div className="text-3xl mb-4 group-hover:scale-110 transition-transform">🌙</div>
+                <h4 className="text-lg font-bold text-white mb-2">Dark Mode &amp; Local Persistence</h4>
+                <p className="text-slate-300 text-sm leading-relaxed">Full Dark Mode CSS theme support with local browser persistence so your data is always safe.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* 4. WEEKLY PROGRESS CHART FIXED AND VISIBLE */}
-        <section id="coach" className="py-24 bg-surface">
-          <div className="max-w-7xl mx-auto px-container-margin animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
-            <div className="text-center mb-16">
-              <h2 className="text-headline-lg font-headline-lg text-primary mb-4">Weekly Trends &amp; Achievements</h2>
-              <p className="text-on-surface-variant">Celebrate your progress and stay on track.</p>
+        {/* Weekly Trends & Milestones Section */}
+        <section id="trends" className="py-24 bg-[#0d1d17] border-t border-emerald-900/40">
+          <div className="max-w-7xl mx-auto px-6 animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
+            <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+              <h2 className="text-3xl sm:text-5xl font-bold font-serif-title text-white">
+                Weekly Trends &amp; Milestones
+              </h2>
+              <p className="text-slate-300 text-base">
+                Track your consistency and celebrate every achievement along the way.
+              </p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-              {/* Left Column: Weekly Progress */}
-              <div className="bg-surface-container-low p-8 rounded-[2rem] border border-outline-variant shadow-sm">
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+              {/* Left: Interactive Weekly Progress Chart */}
+              <div className="bg-[#142920] p-8 rounded-3xl border border-emerald-800/50 shadow-xl">
                 <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-headline-md font-headline-md text-primary">Weekly Progress</h3>
-                  <span className="text-xs font-bold uppercase tracking-wider text-primary/70 bg-primary/10 px-3 py-1 rounded-full">Calorie Intake</span>
+                  <h3 className="text-xl font-bold text-white">7-Day Calorie Intake</h3>
+                  <span className="text-xs font-semibold text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-500/30">
+                    Avg: 1,950 kcal
+                  </span>
                 </div>
 
-                {/* Fixed Weekly Progress Chart Container */}
-                <div className="h-56 flex items-end justify-between gap-3 pt-6 pb-2 px-2 border-b border-outline-variant/60">
+                {/* Fixed Visible Bar Chart Container */}
+                <div className="h-56 flex items-end justify-between gap-3 pt-6 pb-2 px-2 border-b border-emerald-900/60">
                   {weeklyChartBars.map((bar, idx) => (
                     <div key={idx} className="flex-1 h-full flex flex-col justify-end items-center gap-2 group">
-                      <span className="text-[10px] font-bold text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-[10px] font-bold text-emerald-300 opacity-0 group-hover:opacity-100 transition-opacity">
                         {bar.cals}
                       </span>
-                      <div className="w-full bg-surface-container-high/60 rounded-t-lg h-full flex items-end p-0.5">
+                      <div className="w-full bg-emerald-950/80 rounded-t-lg h-full flex items-end p-0.5 border border-emerald-900/40">
                         <div
-                          className={`w-full ${bar.color} rounded-t-md transition-all duration-500 group-hover:opacity-90`}
+                          className={`w-full ${bar.color} rounded-t-md transition-all duration-500 group-hover:brightness-110`}
                           style={{ height: `${bar.heightPct}%` }}
-                        ></div>
+                        />
                       </div>
-                      <span className="text-label-caps font-label-caps text-[11px] font-bold text-primary">
+                      <span className="text-xs font-bold text-slate-300">
                         {bar.day}
                       </span>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-6 pt-4 flex justify-between items-center">
-                  <p className="text-body-md text-on-surface-variant">
-                    Average daily intake: <span className="font-bold text-primary">1,950 kcal</span>
-                  </p>
-                  <span className="text-secondary font-bold text-sm bg-secondary-container/20 px-3 py-1 rounded-full">
-                    +12% vs last week
+                <div className="mt-6 pt-4 flex justify-between items-center text-xs">
+                  <p className="text-slate-300">Target intake: <span className="font-bold text-white">2,100 kcal / day</span></p>
+                  <span className="text-emerald-400 font-bold bg-emerald-950/80 px-3 py-1 rounded-full border border-emerald-500/20">
+                    +12% Consistency
                   </span>
                 </div>
               </div>
 
-              {/* Right Column: Milestones & Badges */}
-              <div className="space-y-6">
-                <h3 className="text-headline-md font-headline-md text-primary mb-8">Milestones &amp; Badges</h3>
+              {/* Right: Badges Grid */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white mb-6">Active Badges &amp; Achievements</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-white p-6 rounded-2xl border border-outline-variant flex items-start gap-4 shadow-sm">
-                    <div className="w-12 h-12 bg-secondary-container/20 text-secondary rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="material-symbols-outlined">local_fire_department</span>
+                  <div className="bg-[#142920] p-5 rounded-2xl border border-emerald-800/50 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center text-2xl">
+                      🔥
                     </div>
                     <div>
-                      <p className="font-bold text-primary">7-Day Streak</p>
-                      <p className="text-sm text-on-surface-variant">Consistent logging for a full week.</p>
+                      <p className="font-bold text-white text-sm">7-Day Streak</p>
+                      <p className="text-xs text-slate-400 mt-0.5">Logged meals 7 days in a row</p>
                     </div>
                   </div>
-                  <div className="bg-white p-6 rounded-2xl border border-outline-variant flex items-start gap-4 shadow-sm">
-                    <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="material-symbols-outlined">water_drop</span>
+
+                  <div className="bg-[#142920] p-5 rounded-2xl border border-emerald-800/50 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-2xl">
+                      💧
                     </div>
                     <div>
-                      <p className="font-bold text-primary">Hydration Hero</p>
-                      <p className="text-sm text-on-surface-variant">Met water goals 5 days in a row.</p>
+                      <p className="font-bold text-white text-sm">Hydration Hero</p>
+                      <p className="text-xs text-slate-400 mt-0.5">Hit water goals 5 days straight</p>
                     </div>
                   </div>
-                  <div className="bg-white p-6 rounded-2xl border border-outline-variant flex items-start gap-4 shadow-sm">
-                    <div className="w-12 h-12 bg-primary-fixed text-primary rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="material-symbols-outlined">fitness_center</span>
+
+                  <div className="bg-[#142920] p-5 rounded-2xl border border-emerald-800/50 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl">
+                      💪
                     </div>
                     <div>
-                      <p className="font-bold text-primary">Protein Power</p>
-                      <p className="text-sm text-on-surface-variant">Hit protein targets consistently.</p>
+                      <p className="font-bold text-white text-sm">Protein Master</p>
+                      <p className="text-xs text-slate-400 mt-0.5">Reached protein target today</p>
                     </div>
                   </div>
-                  <div className="bg-white p-6 rounded-2xl border border-outline-variant flex items-start gap-4 opacity-40 shadow-sm">
-                    <div className="w-12 h-12 bg-surface-container-high text-on-surface-variant rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="material-symbols-outlined">lock</span>
+
+                  <div className="bg-[#142920] p-5 rounded-2xl border border-emerald-800/50 flex items-center gap-4 opacity-50">
+                    <div className="w-12 h-12 rounded-xl bg-slate-800 text-slate-400 flex items-center justify-center text-2xl">
+                      🔒
                     </div>
                     <div>
-                      <p className="font-bold text-primary">Monthly Master</p>
-                      <p className="text-sm text-on-surface-variant">Keep going to unlock this badge!</p>
+                      <p className="font-bold text-white text-sm">30-Day Legend</p>
+                      <p className="text-xs text-slate-400 mt-0.5">Unlock by logging 30 days</p>
                     </div>
                   </div>
                 </div>
@@ -405,46 +464,57 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* AI Coach Chat Banner */}
-        <section className="py-24 bg-surface-container-highest/30">
-          <div className="max-w-4xl mx-auto px-container-margin animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
-            <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-outline-variant">
-              <div className="bg-primary p-6 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-primary-fixed-dim rounded-full flex items-center justify-center text-primary">
-                    <span className="material-symbols-outlined">smart_toy</span>
+        {/* AI Coach Live Interactive Demo */}
+        <section id="coach" className="py-24 bg-[#0b1712] relative">
+          <div className="max-w-4xl mx-auto px-6 animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
+            <div className="bg-[#142920] border border-emerald-700/50 rounded-3xl overflow-hidden shadow-2xl">
+              <div className="bg-[#19362a] p-5 border-b border-emerald-800/50 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500 text-white font-bold flex items-center justify-center text-sm shadow-md">
+                    ✦
                   </div>
                   <div>
-                    <p className="text-on-primary font-bold">Nourish Coach</p>
-                    <p className="text-on-primary/60 text-[10px] font-label-caps uppercase">Online &amp; ready</p>
+                    <p className="text-sm font-bold text-white">Nourish AI Coach</p>
+                    <p className="text-[10px] text-emerald-400 uppercase font-semibold">Online &amp; Data-Aware</p>
                   </div>
                 </div>
-                <span className="material-symbols-outlined text-on-primary opacity-40">more_horiz</span>
+                <span className="text-xs font-semibold text-emerald-400 bg-emerald-950 px-3 py-1 rounded-full border border-emerald-500/20">
+                  Live Demo
+                </span>
               </div>
-              <div className="p-8 space-y-8 bg-surface-container-lowest">
+
+              <div className="p-6 sm:p-8 space-y-6 bg-[#11231a]">
                 {/* User Message */}
                 <div className="flex justify-end">
-                  <div className="bg-surface-container-high px-6 py-4 rounded-2xl rounded-tr-none max-w-sm">
-                    <p className="text-on-surface">What should I eat for dinner?</p>
+                  <div className="bg-emerald-900/60 border border-emerald-700/40 text-emerald-100 px-5 py-3.5 rounded-2xl rounded-tr-none text-sm max-w-sm">
+                    What should I eat for dinner to reach my protein goal?
                   </div>
                 </div>
+
                 {/* AI Message */}
-                <div className="flex justify-start gap-4">
-                  <div className="w-8 h-8 bg-primary-fixed rounded-full flex-shrink-0 flex items-center justify-center text-primary text-sm font-bold">N</div>
-                  <div className="bg-primary text-on-primary px-6 py-4 rounded-2xl rounded-tl-none max-w-md">
-                    <p>Since you have 600 calories and 40g of protein left for today, I recommend a grilled salmon salad with quinoa. It hits your macro goals and keeps your streak alive!</p>
+                <div className="flex justify-start gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex-shrink-0 flex items-center justify-center font-bold text-xs">
+                    ✦
+                  </div>
+                  <div className="bg-[#1a382c] border border-emerald-700/40 text-slate-100 px-5 py-3.5 rounded-2xl rounded-tl-none text-sm max-w-md leading-relaxed">
+                    You have 600 calories and 40g of protein remaining today. I recommend a grilled salmon bowl with quinoa and asparagus — it delivers 38g of protein while staying right in range! 🍽️
                   </div>
                 </div>
-                {/* Interactive Input */}
-                <form onSubmit={handleAskCoach} className="border-t border-outline-variant pt-6 flex items-center gap-4">
+
+                {/* Interactive Input Form */}
+                <form onSubmit={handleAskCoach} className="pt-4 border-t border-emerald-900/60 flex gap-3">
                   <input
+                    type="text"
+                    placeholder="Ask your coach anything (e.g., 'Suggest a low-carb snack')..."
                     value={coachQuery}
                     onChange={e => setCoachQuery(e.target.value)}
-                    placeholder="Ask your coach anything..."
-                    className="flex-1 bg-surface-container-low px-4 py-3 rounded-xl text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="flex-1 bg-[#152c21] border border-emerald-800/60 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 transition-all"
                   />
-                  <button type="submit" className="w-10 h-10 bg-primary text-on-primary rounded-xl flex items-center justify-center hover:opacity-90 transition-all">
-                    <span className="material-symbols-outlined">send</span>
+                  <button
+                    type="submit"
+                    className="bg-emerald-500 hover:bg-emerald-400 text-white font-bold px-5 py-3 rounded-xl text-sm transition-all flex items-center justify-center shadow-md active:scale-95"
+                  >
+                    Send
                   </button>
                 </form>
               </div>
@@ -452,35 +522,30 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* 3. FINAL CTA BAND WITH NON-OVERLAPPING BUTTONS */}
-        <section className="py-24">
-          <div className="max-w-7xl mx-auto px-container-margin animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
-            <div className="bg-primary rounded-[2.5rem] p-10 sm:p-16 md:p-24 text-center relative overflow-hidden shadow-2xl">
-              <div className="absolute inset-0 opacity-10 pointer-events-none">
-                <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
-              </div>
-              <div className="relative z-10 max-w-3xl mx-auto space-y-8">
-                <h2 className="text-display-lg font-display-lg text-on-primary leading-tight">
-                  Start your journey to clarity today.
-                </h2>
-                <p className="text-on-primary/80 text-body-lg max-w-xl mx-auto">
-                  Everything you need to reach your goals, powered by your data and our intelligence.
-                </p>
-                {/* Clean, Non-Overlapping CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center max-w-lg mx-auto pt-2">
-                  <button
-                    onClick={() => router.push('/dashboard')}
-                    className="w-full sm:w-auto inline-flex items-center justify-center bg-secondary-container text-on-secondary-container px-8 py-4 rounded-xl font-label-caps text-label-caps uppercase hover:opacity-90 transition-all shadow-lg font-bold text-center"
-                  >
-                    Start tracking free
-                  </button>
-                  <button
-                    onClick={() => router.push('/dashboard')}
-                    className="w-full sm:w-auto inline-flex items-center justify-center text-on-primary border border-white/30 px-8 py-4 rounded-xl font-label-caps text-label-caps uppercase hover:bg-white/10 transition-all font-bold text-center"
-                  >
-                    View your dashboard
-                  </button>
-                </div>
+        {/* Final CTA Banner */}
+        <section className="py-24 max-w-7xl mx-auto px-6">
+          <div className="bg-gradient-to-br from-[#163826] via-[#1a422d] to-[#0e271a] border border-emerald-500/40 rounded-3xl p-10 sm:p-16 md:p-20 text-center relative overflow-hidden shadow-2xl animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
+            <div className="max-w-2xl mx-auto space-y-8 relative z-10">
+              <h2 className="text-3xl sm:text-5xl font-bold font-serif-title text-white leading-tight">
+                Start your journey to clarity today.
+              </h2>
+              <p className="text-slate-300 text-base leading-relaxed">
+                Everything you need to reach your goals — powered by your real data and intelligent AI coaching.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold px-8 py-4 rounded-xl text-sm transition-all shadow-xl shadow-orange-950/60 active:scale-95"
+                >
+                  Start Tracking Free
+                </button>
+                <button
+                  onClick={() => router.push('/dashboard')}
+                  className="w-full sm:w-auto bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-white font-bold px-8 py-4 rounded-xl text-sm transition-all active:scale-95"
+                >
+                  Explore Dashboard
+                </button>
               </div>
             </div>
           </div>
@@ -488,42 +553,25 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-surface-container-low border-t border-outline-variant">
-        <div className="w-full px-container-margin py-stack-lg max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-stack-md">
-          <div>
-            <div className="text-headline-md font-headline-md text-primary mb-4">Nourish</div>
-            <p className="text-on-surface-variant text-body-md max-w-xs mb-8">© {new Date().getFullYear()} Nourish AI. Empowering clarity in nutrition.</p>
-            <div className="flex gap-6">
-              <span className="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">public</span>
-              <span className="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">favorite</span>
-              <span className="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer transition-colors">share</span>
+      <footer className="bg-[#08120e] border-t border-emerald-950 py-12">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-400">
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-lg bg-emerald-500 text-white font-serif-title font-bold flex items-center justify-center text-sm">
+              n
             </div>
+            <span className="font-serif-title font-bold text-base text-white">Nourish.ai</span>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
-            <div className="space-y-4">
-              <p className="text-label-caps font-label-caps uppercase text-primary">Product</p>
-              <ul className="space-y-2">
-                <li><Link className="text-on-surface-variant hover:text-primary hover:underline transition-all text-body-md" href="/dashboard">Dashboard</Link></li>
-                <li><Link className="text-on-surface-variant hover:text-primary hover:underline transition-all text-body-md" href="/diary">Food Journal</Link></li>
-                <li><a className="text-on-surface-variant hover:text-primary hover:underline transition-all text-body-md" href="#features">Features</a></li>
-              </ul>
-            </div>
-            <div className="space-y-4">
-              <p className="text-label-caps font-label-caps uppercase text-primary">App</p>
-              <ul className="space-y-2">
-                <li><Link className="text-on-surface-variant hover:text-primary hover:underline transition-all text-body-md" href="/coach">AI Coach</Link></li>
-                <li><Link className="text-on-surface-variant hover:text-primary hover:underline transition-all text-body-md" href="/goals">Goals</Link></li>
-                <li><Link className="text-on-surface-variant hover:text-primary hover:underline transition-all text-body-md" href="/progress">Progress</Link></li>
-              </ul>
-            </div>
-            <div className="space-y-4">
-              <p className="text-label-caps font-label-caps uppercase text-primary">Account</p>
-              <ul className="space-y-2">
-                <li><Link className="text-on-surface-variant hover:text-primary hover:underline transition-all text-body-md" href="/settings">Settings</Link></li>
-                <li><Link className="text-on-surface-variant hover:text-primary hover:underline transition-all text-body-md" href="/dashboard">Sign In</Link></li>
-              </ul>
-            </div>
+
+          <div className="flex gap-8">
+            <Link href="/dashboard" className="hover:text-emerald-400 transition-colors">Dashboard</Link>
+            <Link href="/diary" className="hover:text-emerald-400 transition-colors">Food Diary</Link>
+            <Link href="/coach" className="hover:text-emerald-400 transition-colors">AI Coach</Link>
+            <Link href="/goals" className="hover:text-emerald-400 transition-colors">Goals</Link>
+            <Link href="/progress" className="hover:text-emerald-400 transition-colors">Progress</Link>
+            <Link href="/settings" className="hover:text-emerald-400 transition-colors">Settings</Link>
           </div>
+
+          <p>© {new Date().getFullYear()} Nourish AI. All rights reserved.</p>
         </div>
       </footer>
     </div>
