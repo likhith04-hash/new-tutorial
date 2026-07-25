@@ -259,7 +259,16 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = useCallback((patch: Partial<UserProfile>) => {
     setProfile(prev => {
-      const updated = { ...prev, ...patch }
+      let initials = prev.initials
+      if (patch.name && patch.name.trim()) {
+        const parts = patch.name.trim().split(/\s+/).filter(Boolean)
+        if (parts.length === 1) {
+          initials = parts[0].slice(0, 2).toUpperCase()
+        } else if (parts.length > 1) {
+          initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        }
+      }
+      const updated = { ...prev, ...patch, initials: patch.initials || initials }
       if (typeof document !== 'undefined' && updated.theme) {
         document.documentElement.setAttribute('data-theme', updated.theme)
       }
