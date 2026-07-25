@@ -51,9 +51,14 @@ export default function WeeklyChart({
             return (
               <g 
                 key={i} 
+                tabIndex={0}
+                role="graphics-symbol"
+                aria-label={`${d.label}: ${d.value} kcal (target: ${d.max} kcal)`}
                 onMouseEnter={() => setHoverIndex(i)}
                 onMouseLeave={() => setHoverIndex(null)}
-                style={{ cursor: 'pointer' }}
+                onFocus={() => setHoverIndex(i)}
+                onBlur={() => setHoverIndex(null)}
+                style={{ cursor: 'pointer', outline: 'none' }}
               >
                 <rect
                   className="chart-bar"

@@ -24,7 +24,13 @@ export default function MacroRing({ value, total, label, color, size = 91, unit 
   const unitSuffix = unit ? (unit === 'g' ? 'g' : ` ${unit}`) : ''
 
   return (
-    <div className="macro">
+    <div
+      className="macro"
+      role="progressbar"
+      aria-valuenow={value}
+      aria-valuemax={total}
+      aria-label={`${label}: ${value} of ${total}${unitSuffix}`}
+    >
       <div
         className="ring"
         style={{

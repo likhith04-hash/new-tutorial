@@ -83,6 +83,26 @@
   --tr-slow: .45s ease;
 }
 
+[data-theme="dark"] {
+  --clr-bg:          #151c1a;
+  --clr-surface:     #1c2623;
+  --clr-sidebar:     #18211f;
+  --clr-border:      #2a3834;
+  --clr-border-light:#23302c;
+  --clr-card:        #1f2a27;
+  --clr-card-alt:    #232f2c;
+
+  --clr-text:        #e8eee9;
+  --clr-text-muted:  #a9b8b2;
+  --clr-text-soft:   #859791;
+  --clr-text-faint:  #63756f;
+  --clr-text-label:  #758781;
+
+  --clr-brand-light: #382823;
+  --clr-hero:        #1f3833;
+  --clr-hero-bar:    #36544e;
+}
+
 /* ═══════════════════════════════════════════════
    RESET & BASE
    ═══════════════════════════════════════════════ */

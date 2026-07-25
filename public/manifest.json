@@ -1,0 +1,21 @@
+{
+  "name": "Nourish AI — Health & Nutrition Companion",
+  "short_name": "Nourish AI",
+  "description": "AI-powered nutrition tracking, proactive coaching, and daily health companion.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8f7f4",
+  "theme_color": "#314f49",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

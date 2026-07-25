@@ -206,6 +206,13 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
     setHydrated(true)
   }, [])
 
+  /* sync data-theme to document element */
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', profile.theme)
+    }
+  }, [profile.theme])
+
   /* persist whenever state changes (after hydration) */
   useEffect(() => {
     if (!hydrated) return

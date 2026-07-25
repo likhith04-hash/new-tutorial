@@ -153,11 +153,13 @@ function CoachContent() {
   )
 }
 
+import SkeletonLoader from '@/app/components/SkeletonLoader'
+
 export default function CoachPage() {
   return (
     <>
       <Header />
-      <Suspense fallback={<div style={{ padding: 40, textAlign: 'center' }}>Loading Coach...</div>}>
+      <Suspense fallback={<SkeletonLoader />}>
         <CoachContent />
       </Suspense>
     </>
