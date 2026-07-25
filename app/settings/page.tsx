@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Header from '@/app/components/Header'
 import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
+import { Button, Card, Badge, PageHeader, Input } from '@/app/components/ui/DesignSystem'
 
 export default function SettingsPage() {
   const { profile, updateProfile, clearAllData, meals, waterLogs, weightEntries, goals } = useNutrition()
@@ -55,211 +56,126 @@ export default function SettingsPage() {
   }
 
   return (
-    <>
+    <div className="dark min-h-screen bg-[#09090B] text-[#FFFFFF] font-sans px-6 md:px-8 py-8 max-w-[1280px] mx-auto space-y-8">
       <Header />
-      <div className="settings-page">
 
-        {/* Profile */}
-        <div className="settings-section">
-          <h3 className="section-title">Profile</h3>
-          <div className="settings-profile-header">
-            <div className="avatar">{local.initials}</div>
-            <div>
-              <b>{local.name}</b>
-              <small>{local.email}</small>
-            </div>
+      <PageHeader
+        badge="SYSTEM CONFIGURATION"
+        title="Settings &amp; Preferences"
+        subtitle="Manage your profile, subscription tier, notifications, and exported data."
+        action={
+          <Button variant="secondary" onClick={save}>
+            Save Settings →
+          </Button>
+        }
+      />
+
+      {/* User Profile Card */}
+      <Card variant="default" radius="md" className="space-y-6">
+        <div className="flex items-center gap-4 pb-4 border-b border-white/[0.08]">
+          <div className="w-12 h-12 rounded-full bg-[#22D3EE] text-[#09090B] font-bold flex items-center justify-center text-lg">
+            {local.initials}
           </div>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="settings-name" className="form-label">Name</label>
-              <input id="settings-name" className="form-input" value={local.name} onChange={e => setText('name', e.target.value)} onBlur={save} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="settings-email" className="form-label">Email</label>
-              <input id="settings-email" className="form-input" type="email" value={local.email} onChange={e => setText('email', e.target.value)} onBlur={save} />
-            </div>
-          </div>
-          <div className="form-row-3">
-            <div className="form-group">
-              <label htmlFor="settings-height" className="form-label">Height (cm)</label>
-              <input id="settings-height" className="form-input" type="number" value={local.heightCm} onChange={e => setNum('heightCm', e.target.value)} onBlur={save} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="settings-weight" className="form-label">Weight (kg)</label>
-              <input id="settings-weight" className="form-input" type="number" value={local.weightKg} onChange={e => setNum('weightKg', e.target.value)} onBlur={save} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="settings-target-weight" className="form-label">Target Weight (kg)</label>
-              <input id="settings-target-weight" className="form-input" type="number" value={local.targetWeightKg} onChange={e => setNum('targetWeightKg', e.target.value)} onBlur={save} />
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="settings-allergies" className="form-label">Allergies & Restrictions</label>
-            <div className="tags">
-              {local.allergies.map(a => (
-                <span key={a} className="tag">{a}<button className="tag-remove" onClick={() => removeAllergy(a)}>×</button></span>
-              ))}
-            </div>
-            <input id="settings-allergies" className="tag-input" placeholder="Type and press Enter…" value={newAllergy} onChange={e => setNewAllergy(e.target.value)} onKeyDown={addAllergy} onBlur={save} />
+          <div>
+            <h2 className="text-[20px] font-medium text-white">{local.name}</h2>
+            <p className="text-[14px] text-[#A1A1AA]">{local.email}</p>
           </div>
         </div>
 
-        {/* Subscription Plan & Upsell */}
-        <div className="settings-section" style={{ background: local.plan.includes('Pro') ? 'linear-gradient(135deg, #e8f5e9, #c8e6c9)' : 'linear-gradient(135deg, #faf6f0, #f4ebe1)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <div>
-              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--clr-brand-hover)' }}>SUBSCRIPTION PLAN</span>
-              <h3 style={{ margin: '2px 0 0', font: '700 20px var(--ff-heading)' }}>
-                {local.plan} {local.plan.includes('Pro') ? '✦ Active' : ''}
-              </h3>
-            </div>
-            {!local.plan.includes('Pro') && (
-              <span style={{ background: 'var(--clr-hero-accent)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 12 }}>
-                PRO FEATURE
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-medium uppercase text-[#A1A1AA]">Full Name</label>
+            <Input value={local.name} onChange={e => setText('name', e.target.value)} onBlur={save} />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-medium uppercase text-[#A1A1AA]">Email Address</label>
+            <Input type="email" value={local.email} onChange={e => setText('email', e.target.value)} onBlur={save} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-medium uppercase text-[#A1A1AA]">Height (cm)</label>
+            <Input type="number" value={local.heightCm} onChange={e => setNum('heightCm', e.target.value)} onBlur={save} />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-medium uppercase text-[#A1A1AA]">Current Weight (kg)</label>
+            <Input type="number" value={local.weightKg} onChange={e => setNum('weightKg', e.target.value)} onBlur={save} />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-[13px] font-medium uppercase text-[#A1A1AA]">Target Weight (kg)</label>
+            <Input type="number" value={local.targetWeightKg} onChange={e => setNum('targetWeightKg', e.target.value)} onBlur={save} />
+          </div>
+        </div>
+
+        {/* Dietary Restrictions */}
+        <div className="space-y-2">
+          <label className="text-[13px] font-medium uppercase text-[#A1A1AA]">Allergies &amp; Restrictions</label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {local.allergies.map(a => (
+              <span key={a} className="bg-[#18181B] border border-white/[0.08] text-white text-xs px-3 py-1 rounded-full flex items-center gap-2">
+                {a}
+                <button onClick={() => removeAllergy(a)} className="text-[#A1A1AA] hover:text-white">×</button>
               </span>
-            )}
+            ))}
           </div>
+          <Input
+            placeholder="Type restriction and press Enter…"
+            value={newAllergy}
+            onChange={e => setNewAllergy(e.target.value)}
+            onKeyDown={addAllergy}
+            onBlur={save}
+          />
+        </div>
+      </Card>
 
-          {!local.plan.includes('Pro') ? (
-            <div>
-              <p style={{ fontSize: 13, color: 'var(--clr-text-soft)', marginBottom: 14, lineHeight: 1.5 }}>
-                Upgrade to <b>Nourish Pro</b> ($9.99/mo) for unlimited AI Photo Food Scanning, proactive AI coaching, and deep micronutrient analytics.
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 12, marginBottom: 16 }}>
-                <div>✨ Unlimited AI Photo Scanning</div>
-                <div>🤖 24/7 Proactive AI Coach</div>
-                <div>📊 Micronutrient Tracking</div>
-                <div>⚡ Personalized Meal Plans</div>
-              </div>
-              <button
-                className="add full"
-                onClick={() => {
-                  const updated = { ...local, plan: 'Pro Plan' }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
-              >
-                <Icon name="sparkle" size={16} /> Upgrade to Nourish Pro ($9.99/mo)
-              </button>
-            </div>
-          ) : (
-            <div>
-              <p style={{ fontSize: 13, color: 'var(--clr-text-soft)', marginBottom: 12 }}>
-                You have full access to all AI features, unlimited photo food scanning, and proactive coaching.
-              </p>
-              <button
-                style={{ fontSize: 12, background: 'none', border: '1px solid var(--clr-border)', padding: '6px 12px', borderRadius: 6, cursor: 'pointer' }}
-                onClick={() => {
-                  const updated = { ...local, plan: 'Free plan' }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
-              >
-                Manage Subscription
-              </button>
-            </div>
-          )}
+      {/* Subscription Tier */}
+      <Card variant="highlight" radius="md" className="space-y-6">
+        <div className="flex justify-between items-center pb-4 border-b border-white/[0.08]">
+          <div>
+            <span className="text-[13px] font-medium uppercase tracking-wider text-[#22D3EE]">SUBSCRIPTION OS</span>
+            <h2 className="text-[20px] font-semibold text-white">{local.plan}</h2>
+          </div>
+          <Badge variant="cyan">Pro Active</Badge>
         </div>
 
-        {/* Preferences */}
-        <div className="settings-section">
-          <h3 className="section-title">Preferences</h3>
-          <div className="form-group">
-            <label className="form-label">Units</label>
-            <div className="option-toggle">
-              <button
-                className={local.units === 'metric' ? 'active' : ''}
-                onClick={() => {
-                  const updated = { ...local, units: 'metric' as const }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
-              >
-                Metric
-              </button>
-              <button
-                className={local.units === 'imperial' ? 'active' : ''}
-                onClick={() => {
-                  const updated = { ...local, units: 'imperial' as const }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
-              >
-                Imperial
-              </button>
-            </div>
+        <p className="text-[14px] text-[#A1A1AA]">
+          You have active access to AI vision recognition, real-time edge streaming coach, and automated bento analytics.
+        </p>
+      </Card>
+
+      {/* Notifications & Data Management */}
+      <Card variant="default" radius="md" className="space-y-6">
+        <div className="pb-4 border-b border-white/[0.08]">
+          <h2 className="text-[20px] font-medium text-white">System Notifications &amp; Data Management</h2>
+        </div>
+
+        <div className="space-y-4">
+          <div className="flex justify-between items-center p-4 bg-[#09090B] border border-white/[0.08] rounded-[14px]">
+            <span className="text-sm font-medium text-white">Meal Logging Reminders</span>
+            <input type="checkbox" checked={local.notifications.mealReminders} onChange={() => toggleNotif('mealReminders')} className="accent-[#22D3EE] w-4 h-4 cursor-pointer" />
           </div>
-          <div className="form-group">
-            <label className="form-label">Theme</label>
-            <div className="option-toggle">
-              <button
-                className={local.theme === 'light' ? 'active' : ''}
-                onClick={() => {
-                  const updated = { ...local, theme: 'light' as const }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
-              >
-                <Icon name="sun" size={14} /> Light
-              </button>
-              <button
-                className={local.theme === 'dark' ? 'active' : ''}
-                onClick={() => {
-                  const updated = { ...local, theme: 'dark' as const }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
-              >
-                <Icon name="moon" size={14} /> Dark
-              </button>
-            </div>
+
+          <div className="flex justify-between items-center p-4 bg-[#09090B] border border-white/[0.08] rounded-[14px]">
+            <span className="text-sm font-medium text-white">Hydration Reminders</span>
+            <input type="checkbox" checked={local.notifications.waterReminders} onChange={() => toggleNotif('waterReminders')} className="accent-[#22D3EE] w-4 h-4 cursor-pointer" />
+          </div>
+
+          <div className="flex justify-between items-center p-4 bg-[#09090B] border border-white/[0.08] rounded-[14px]">
+            <span className="text-sm font-medium text-white">Weekly Performance Report</span>
+            <input type="checkbox" checked={local.notifications.weeklyReport} onChange={() => toggleNotif('weeklyReport')} className="accent-[#22D3EE] w-4 h-4 cursor-pointer" />
           </div>
         </div>
 
-        {/* Notifications */}
-        <div className="settings-section">
-          <h3 className="section-title">Notifications</h3>
-          <div className="toggle-row">
-            <span>Meal reminders</span>
-            <label className="toggle-switch">
-              <input type="checkbox" checked={local.notifications.mealReminders} onChange={() => toggleNotif('mealReminders')} />
-              <span className="toggle-slider" />
-            </label>
-          </div>
-          <div className="toggle-row">
-            <span>Water reminders</span>
-            <label className="toggle-switch">
-              <input type="checkbox" checked={local.notifications.waterReminders} onChange={() => toggleNotif('waterReminders')} />
-              <span className="toggle-slider" />
-            </label>
-          </div>
-          <div className="toggle-row">
-            <span>Weekly report</span>
-            <label className="toggle-switch">
-              <input type="checkbox" checked={local.notifications.weeklyReport} onChange={() => toggleNotif('weeklyReport')} />
-              <span className="toggle-slider" />
-            </label>
-          </div>
+        <div className="pt-6 border-t border-white/[0.08] flex flex-wrap gap-4">
+          <Button variant="outline" onClick={handleExport}>
+            📥 Export JSON Data
+          </Button>
+          <Button variant="danger" onClick={handleReset}>
+            🗑️ Reset All Data
+          </Button>
         </div>
-
-        {/* Danger Zone */}
-        <div className="danger-zone">
-          <h3 className="section-title">Data Management</h3>
-          <button className="danger-btn" onClick={handleExport}>
-            <Icon name="download" size={16} /> Export data
-          </button>
-          <button className="danger-btn red" onClick={handleReset}>
-            <Icon name="trash" size={16} /> Reset all data
-          </button>
-        </div>
-
-        {/* About */}
-        <div className="about-section">
-          <b>Nourish AI</b>
-          <p>Version 0.1.0</p>
-          <p>Built with Next.js & love ✦</p>
-        </div>
-      </div>
-    </>
+      </Card>
+    </div>
   )
 }
