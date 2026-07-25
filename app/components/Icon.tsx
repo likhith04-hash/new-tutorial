@@ -36,12 +36,15 @@ const paths: Record<string, string> = {
   trophy: 'M6 9H3v3a4 4 0 004 4h1m10-7h3v3a4 4 0 01-4 4h-1M8 2h8v8a4 4 0 01-8 0V2zM10 16h4v2a2 2 0 01-2 2 2 2 0 01-2-2v-2zM7 22h10',
   zap: 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
   info: 'M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10zM12 16v-4M12 8h.01',
+  camera: 'M4 7h3l1.5-2h7L17 7h3a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V9a2 2 0 012-2zm8 10a5 5 0 100-10 5 5 0 000 10z',
+  barcode: 'M3 4v16M6 4v16M9 4v16M13 4v16M15 4v16M19 4v16M21 4v16',
+  repeat: 'M17 2l4 4-4 4M3 11V9a3 3 0 013-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 01-3 3H3',
 }
 
 export default function Icon({ name, size = 19, className = '' }: IconProps) {
   const d = paths[name]
   if (!d) return <span className={className} style={{ fontSize: size, lineHeight: 1 }}>•</span>
-  const isStroke = ['plus', 'bell', 'arrow', 'search', 'check', 'menu', 'moon', 'sun', 'send', 'edit', 'trash', 'user', 'clock', 'chevronLeft', 'chevronRight', 'logout', 'download', 'trophy', 'zap', 'info'].includes(name)
+  const isStroke = ['plus', 'bell', 'arrow', 'search', 'check', 'menu', 'moon', 'sun', 'send', 'edit', 'trash', 'user', 'clock', 'chevronLeft', 'chevronRight', 'logout', 'download', 'trophy', 'zap', 'info', 'camera', 'barcode', 'repeat'].includes(name)
   return (
     <svg
       width={size} height={size} viewBox="0 0 24 24" className={className}

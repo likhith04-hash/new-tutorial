@@ -64,7 +64,10 @@ export default function SettingsPage() {
           <h3 className="section-title">Profile</h3>
           <div className="settings-profile-header">
             <div className="avatar">{local.initials}</div>
-            <div><b>{local.name}</b><small>{local.email}</small></div>
+            <div>
+              <b>{local.name}</b>
+              <small>{local.email}</small>
+            </div>
           </div>
           <div className="form-row">
             <div className="form-group">
@@ -99,6 +102,63 @@ export default function SettingsPage() {
             </div>
             <input className="tag-input" placeholder="Type and press Enter…" value={newAllergy} onChange={e => setNewAllergy(e.target.value)} onKeyDown={addAllergy} onBlur={save} />
           </div>
+        </div>
+
+        {/* Subscription Plan & Upsell */}
+        <div className="settings-section" style={{ background: local.plan.includes('Pro') ? 'linear-gradient(135deg, #e8f5e9, #c8e6c9)' : 'linear-gradient(135deg, #faf6f0, #f4ebe1)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <div>
+              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--clr-brand-hover)' }}>SUBSCRIPTION PLAN</span>
+              <h3 style={{ margin: '2px 0 0', font: '700 20px var(--ff-heading)' }}>
+                {local.plan} {local.plan.includes('Pro') ? '✦ Active' : ''}
+              </h3>
+            </div>
+            {!local.plan.includes('Pro') && (
+              <span style={{ background: 'var(--clr-hero-accent)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 12 }}>
+                PRO FEATURE
+              </span>
+            )}
+          </div>
+
+          {!local.plan.includes('Pro') ? (
+            <div>
+              <p style={{ fontSize: 13, color: 'var(--clr-text-soft)', marginBottom: 14, lineHeight: 1.5 }}>
+                Upgrade to <b>Nourish Pro</b> ($9.99/mo) for unlimited AI Photo Food Scanning, proactive AI coaching, and deep micronutrient analytics.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 12, marginBottom: 16 }}>
+                <div>✨ Unlimited AI Photo Scanning</div>
+                <div>🤖 24/7 Proactive AI Coach</div>
+                <div>📊 Micronutrient Tracking</div>
+                <div>⚡ Personalized Meal Plans</div>
+              </div>
+              <button
+                className="add full"
+                onClick={() => {
+                  const updated = { ...local, plan: 'Pro Plan' }
+                  setLocal(updated)
+                  updateProfile(updated)
+                }}
+              >
+                <Icon name="sparkle" size={16} /> Upgrade to Nourish Pro ($9.99/mo)
+              </button>
+            </div>
+          ) : (
+            <div>
+              <p style={{ fontSize: 13, color: 'var(--clr-text-soft)', marginBottom: 12 }}>
+                You have full access to all AI features, unlimited photo food scanning, and proactive coaching.
+              </p>
+              <button
+                style={{ fontSize: 12, background: 'none', border: '1px solid var(--clr-border)', padding: '6px 12px', borderRadius: 6, cursor: 'pointer' }}
+                onClick={() => {
+                  const updated = { ...local, plan: 'Free plan' }
+                  setLocal(updated)
+                  updateProfile(updated)
+                }}
+              >
+                Manage Subscription
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Preferences */}

@@ -62,7 +62,7 @@ export default function GoalsPage() {
         <div className="goal-cards">
           <div className="goal-card">
             <div className="goal-header"><label>Calories</label><span>{todayCals} / {local.calories} kcal</span></div>
-            <div className="goal-ring-wrap"><MacroRing value={todayCals} total={local.calories} label="kcal" color="var(--clr-hero-accent)" size={80} /></div>
+            <div className="goal-ring-wrap"><MacroRing value={todayCals} total={local.calories} label="kcal" color="var(--clr-hero-accent)" size={80} unit="kcal" /></div>
             <input type="number" className="goal-input" value={local.calories} onChange={e => setField('calories', +e.target.value)} onBlur={handleSave} />
           </div>
           <div className="goal-card">

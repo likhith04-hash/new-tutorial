@@ -9,12 +9,14 @@ import HydrationTracker from '@/app/components/HydrationTracker'
 import MealCard from '@/app/components/MealCard'
 import AddMealModal from '@/app/components/AddMealModal'
 import WeeklyChart from '@/app/components/WeeklyChart'
+import SmartNudge from '@/app/components/SmartNudge'
 import Icon from '@/app/components/Icon'
-import { useNutrition } from '@/app/components/NutritionContext'
+import { useNutrition, type Meal } from '@/app/components/NutritionContext'
 
 export default function DashboardPage() {
   const { goals, getMealsForDate, getMacrosForDate, getCaloriesForDate } = useNutrition()
   const [showAdd, setShowAdd] = useState(false)
+  const [editingMeal, setEditingMeal] = useState<Meal | null>(null)
   const today = new Date().toISOString().slice(0, 10)
 
   const meals = getMealsForDate(today)
@@ -32,9 +34,19 @@ export default function DashboardPage() {
     })
   }, [getCaloriesForDate, goals.calories])
 
+  const handleEditMeal = (meal: Meal) => {
+    setEditingMeal(meal)
+    setShowAdd(true)
+  }
+
+  const handleCloseModal = () => {
+    setShowAdd(false)
+    setEditingMeal(null)
+  }
+
   return (
     <>
-      <Header onLogFood={() => setShowAdd(true)} />
+      <Header onLogFood={() => { setEditingMeal(null); setShowAdd(true) }} />
 
       <CalorieHero date={today} />
 
@@ -63,11 +75,22 @@ export default function DashboardPage() {
           <h2>Today&apos;s meals</h2>
           <p>{meals.length} items logged · {calories.toLocaleString()} kcal</p>
         </div>
-        <button className="link" onClick={() => setShowAdd(true)}>Add meal <Icon name="plus" size={14} /></button>
+        <button className="link" onClick={() => { setEditingMeal(null); setShowAdd(true) }}>Add meal <Icon name="plus" size={14} /></button>
       </section>
 
       <section className="meal-list">
-        {meals.map(meal => <MealCard key={meal.id} meal={meal} />)}
+        {meals.length > 0 ? (
+          meals.map(meal => <MealCard key={meal.id} meal={meal} onEdit={handleEditMeal} />)
+        ) : (
+          <div className="empty-state" style={{ padding: '36px 20px', background: 'var(--clr-card)', borderRadius: 'var(--r-lg)', border: '1px dashed var(--clr-border)', textAlign: 'center' }}>
+            <div className="empty-icon">🍽️</div>
+            <h3 style={{ margin: '8px 0 4px', fontSize: 16 }}>No meals logged yet today</h3>
+            <p className="empty-text" style={{ fontSize: 13, color: 'var(--clr-text-soft)', marginBottom: 16 }}>Start tracking to see your calorie &amp; macro breakdown.</p>
+            <button className="add" onClick={() => { setEditingMeal(null); setShowAdd(true) }}>
+              <Icon name="plus" size={15} /> Add first meal
+            </button>
+          </div>
+        )}
       </section>
 
       <section className="weekly-section">
@@ -77,15 +100,9 @@ export default function DashboardPage() {
         <WeeklyChart data={weeklyData} title="Daily Calories" color="var(--clr-hero-accent)" />
       </section>
 
-      <div className="insight-card">
-        <div className="insight-icon"><Icon name="sparkle" size={20} /></div>
-        <div className="insight-content">
-          <b>AI Insight</b>
-          <p>Your protein intake has improved 15% this week. Keep up the balanced meals — you&apos;re building great habits!</p>
-        </div>
-      </div>
+      <SmartNudge />
 
-      <AddMealModal open={showAdd} onClose={() => setShowAdd(false)} date={today} />
+      <AddMealModal open={showAdd} onClose={handleCloseModal} date={today} editMeal={editingMeal} />
     </>
   )
 }

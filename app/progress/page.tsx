@@ -8,7 +8,9 @@ import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
 
 export default function ProgressPage() {
-  const { weightEntries, getCaloriesForDate, getMacrosForDate, goals } = useNutrition()
+  const { weightEntries, getCaloriesForDate, getMacrosForDate, goals, getLoggingStreak, getWaterForDate, meals } = useNutrition()
+
+  const streak = getLoggingStreak()
 
   const last7Days = useMemo(() =>
     Array.from({ length: 7 }, (_, i) => {
@@ -16,16 +18,31 @@ export default function ProgressPage() {
       return d.toISOString().slice(0, 10)
     }), [])
 
-  const { weeklyData, avgCalories, avgProtein, avgCarbs, avgFat } = useMemo(() => {
+  const { weeklyData, avgCalories, avgProtein, avgCarbs, avgFat, waterGoalCount, breakfastCount } = useMemo(() => {
     let totalCal = 0, totalP = 0, totalC = 0, totalF = 0
+    let wCount = 0, bCount = 0
+
     const wd = last7Days.map(date => {
       const cals = getCaloriesForDate(date)
       const m = getMacrosForDate(date)
       totalCal += cals; totalP += m.protein; totalC += m.carbs; totalF += m.fat
+      
+      if (getWaterForDate(date) >= goals.waterGlasses) wCount++
+      if (meals.some(item => item.date === date && item.type === 'Breakfast')) bCount++
+
       return { label: new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }), value: cals, max: goals.calories }
     })
-    return { weeklyData: wd, avgCalories: Math.round(totalCal / 7), avgProtein: Math.round(totalP / 7), avgCarbs: Math.round(totalC / 7), avgFat: Math.round(totalF / 7) }
-  }, [last7Days, getCaloriesForDate, getMacrosForDate, goals.calories])
+
+    return {
+      weeklyData: wd,
+      avgCalories: Math.round(totalCal / 7),
+      avgProtein: Math.round(totalP / 7),
+      avgCarbs: Math.round(totalC / 7),
+      avgFat: Math.round(totalF / 7),
+      waterGoalCount: wCount,
+      breakfastCount: bCount,
+    }
+  }, [last7Days, getCaloriesForDate, getMacrosForDate, getWaterForDate, goals.calories, goals.waterGlasses, meals])
 
   const latestWeight = weightEntries.length > 0 ? weightEntries[weightEntries.length - 1].kg : 0
   const firstWeight = weightEntries.length > 0 ? weightEntries[0].kg : 0
@@ -44,6 +61,50 @@ export default function ProgressPage() {
       return `${x},${y}`
     }).join(' ')
   }, [weightEntries])
+
+  // Achievements evaluation
+  const achievements = [
+    {
+      id: 'streak',
+      title: `${streak > 0 ? streak : 3}-Day Streak`,
+      desc: 'Logged meals continuously',
+      icon: 'fire',
+      color: 'gold',
+      unlocked: streak >= 3,
+    },
+    {
+      id: 'hydration',
+      title: 'Hydration Hero',
+      desc: `Hit water goal ${waterGoalCount}/7 times this week`,
+      icon: 'water',
+      color: 'blue',
+      unlocked: waterGoalCount >= 3,
+    },
+    {
+      id: 'protein',
+      title: 'Protein Power',
+      desc: `Averaged ${avgProtein}g protein daily (target: ${goals.proteinG}g)`,
+      icon: 'zap',
+      color: 'orange',
+      unlocked: avgProtein >= goals.proteinG * 0.75,
+    },
+    {
+      id: 'earlybird',
+      title: 'Early Bird',
+      desc: `Logged breakfast ${breakfastCount}/7 days this week`,
+      icon: 'trophy',
+      color: 'green',
+      unlocked: breakfastCount >= 4,
+    },
+    {
+      id: 'goalmaster',
+      title: 'Goal Champion',
+      desc: `Averaging ${Math.round((avgCalories / goals.calories) * 100)}% of target calories`,
+      icon: 'target',
+      color: 'gold',
+      unlocked: avgCalories >= goals.calories * 0.85 && avgCalories <= goals.calories * 1.15,
+    },
+  ]
 
   return (
     <>
@@ -68,8 +129,8 @@ export default function ProgressPage() {
           </div>
           <div className="stat-card">
             <div className="stat-label">Logging Streak</div>
-            <div className="stat-value">5 days</div>
-            <div className="stat-change up">🔥 Keep it up!</div>
+            <div className="stat-value">{streak} {streak === 1 ? 'day' : 'days'}</div>
+            <div className="stat-change up">{streak > 0 ? '🔥 Keep it up!' : 'Start your streak today'}</div>
           </div>
         </div>
 
@@ -120,40 +181,20 @@ export default function ProgressPage() {
           </div>
         </div>
 
-        <div className="section-heading"><div><h2>Achievements</h2><p>Badges you&apos;ve earned this week</p></div></div>
+        <div className="section-heading"><div><h2>Achievements</h2><p>Badges dynamically evaluated from your logs</p></div></div>
         <div className="achievements">
-          <div className="achievement-card">
-            <div className="achievement-icon gold"><Icon name="fire" size={22} /></div>
-            <div className="achievement-info">
-              <b>5-Day Streak</b>
-              <p>Logged meals 5 days in a row</p>
+          {achievements.map(ach => (
+            <div key={ach.id} className="achievement-card" style={{ opacity: ach.unlocked ? 1 : 0.65 }}>
+              <div className={`achievement-icon ${ach.color}`}><Icon name={ach.icon as any} size={22} /></div>
+              <div className="achievement-info">
+                <b>{ach.title}</b>
+                <p>{ach.desc}</p>
+              </div>
+              <span className={`badge${ach.unlocked ? '' : ' locked'}`} style={{ background: ach.unlocked ? undefined : 'var(--clr-border)', color: ach.unlocked ? undefined : 'var(--clr-text-soft)' }}>
+                {ach.unlocked ? 'Earned' : 'In Progress'}
+              </span>
             </div>
-            <span className="badge">Earned</span>
-          </div>
-          <div className="achievement-card">
-            <div className="achievement-icon blue"><Icon name="water" size={22} /></div>
-            <div className="achievement-info">
-              <b>Hydration Hero</b>
-              <p>Hit your water goal 4 times this week</p>
-            </div>
-            <span className="badge">Earned</span>
-          </div>
-          <div className="achievement-card">
-            <div className="achievement-icon orange"><Icon name="zap" size={22} /></div>
-            <div className="achievement-info">
-              <b>Protein Power</b>
-              <p>Averaged over 70g protein daily</p>
-            </div>
-            <span className="badge">Earned</span>
-          </div>
-          <div className="achievement-card">
-            <div className="achievement-icon green"><Icon name="trophy" size={22} /></div>
-            <div className="achievement-info">
-              <b>Early Bird</b>
-              <p>Logged breakfast every day this week</p>
-            </div>
-            <span className="badge">Earned</span>
-          </div>
+          ))}
         </div>
       </div>
     </>

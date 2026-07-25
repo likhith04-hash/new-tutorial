@@ -66,6 +66,8 @@ export interface NutritionContextType {
 
   /* actions */
   addMeal: (meal: Omit<Meal, 'id'>) => void
+  repeatMeal: (meal: Meal, date: string) => void
+  updateMeal: (id: string, patch: Partial<Meal>) => void
   removeMeal: (id: string) => void
   setWater: (date: string, glasses: number) => void
   addWater: (date: string) => void
@@ -80,6 +82,7 @@ export interface NutritionContextType {
   getWaterForDate: (date: string) => number
   getCaloriesForDate: (date: string) => number
   getMacrosForDate: (date: string) => { protein: number; carbs: number; fat: number }
+  getLoggingStreak: () => number
 }
 
 /* ───────── Helpers ───────── */
@@ -215,8 +218,16 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
     setMeals(prev => [...prev, { ...meal, id: uid() }])
   }, [])
 
+  const updateMeal = useCallback((id: string, patch: Partial<Meal>) => {
+    setMeals(prev => prev.map(m => m.id === id ? { ...m, ...patch } : m))
+  }, [])
+
   const removeMeal = useCallback((id: string) => {
     setMeals(prev => prev.filter(m => m.id !== id))
+  }, [])
+
+  const repeatMeal = useCallback((meal: Meal, date: string) => {
+    setMeals(prev => [...prev, { ...meal, id: uid(), date, detail: `${meal.detail} · repeated` }])
   }, [])
 
   const setWaterFn = useCallback((date: string, glasses: number) => {
@@ -247,9 +258,9 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const clearAllData = useCallback(() => {
-    setMeals(SEED_MEALS)
-    setWaterLogs(SEED_WATER)
-    setWeightEntries(SEED_WEIGHT)
+    setMeals([])
+    setWaterLogs({})
+    setWeightEntries([])
     setGoals(DEFAULT_GOALS)
     setProfile(DEFAULT_PROFILE)
     setChatMessages([])
@@ -275,11 +286,39 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
     }
   }, [meals])
 
+  const getLoggingStreak = useCallback(() => {
+    let streak = 0
+    const todayStr = today()
+    let checkDate = new Date()
+    
+    // Check today first. If no meals today, check starting from yesterday
+    const todayMeals = meals.filter(m => m.date === todayStr)
+    if (todayMeals.length > 0) {
+      streak++
+      checkDate.setDate(checkDate.getDate() - 1)
+    } else {
+      checkDate.setDate(checkDate.getDate() - 1)
+    }
+
+    while (true) {
+      const dStr = checkDate.toISOString().slice(0, 10)
+      const dayMeals = meals.filter(m => m.date === dStr)
+      if (dayMeals.length > 0) {
+        streak++
+        checkDate.setDate(checkDate.getDate() - 1)
+      } else {
+        break
+      }
+    }
+
+    return streak
+  }, [meals])
+
   const value: NutritionContextType = {
     meals, waterLogs, weightEntries, goals, profile, chatMessages,
-    addMeal, removeMeal, setWater: setWaterFn, addWater, addWeightEntry,
+    addMeal, repeatMeal, updateMeal, removeMeal, setWater: setWaterFn, addWater, addWeightEntry,
     updateGoals, updateProfile, addChatMessage, clearAllData,
-    getMealsForDate, getWaterForDate, getCaloriesForDate, getMacrosForDate,
+    getMealsForDate, getWaterForDate, getCaloriesForDate, getMacrosForDate, getLoggingStreak,
   }
 
   return <NutritionContext.Provider value={value}>{children}</NutritionContext.Provider>

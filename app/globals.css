@@ -539,32 +539,38 @@ h1 span { color: var(--clr-hero-accent); }
 
 .more {
   background: transparent; border: 0;
-  color: #aaa; font-weight: 700;
-  letter-spacing: 1px; margin-left: 8px;
-  position: relative;
+  color: var(--clr-text-soft); font-weight: 700;
+  letter-spacing: 1px; margin-left: 4px;
+  min-width: 36px; min-height: 36px;
+  display: grid; place-items: center;
+  border-radius: var(--r-sm);
+  transition: background var(--tr-fast), color var(--tr-fast);
 }
+.more:hover { background: var(--clr-brand-light); color: var(--clr-brand); }
 
 .meal-actions {
   position: absolute;
-  right: 8px; top: 56px;
+  right: 0; top: 40px;
   background: var(--clr-card);
   border: 1px solid var(--clr-border);
   border-radius: var(--r-sm);
   box-shadow: var(--sh-hover);
   padding: 4px;
-  z-index: 5;
+  z-index: 20;
+  min-width: 130px;
   animation: fadeIn .15s ease;
 }
 .meal-actions button {
   display: flex; align-items: center; gap: 8px;
-  padding: 8px 14px;
+  padding: 8px 12px;
   border: 0; background: none;
-  font-size: 12px; color: var(--clr-danger);
+  font-size: 12px; color: var(--clr-text);
   border-radius: 6px;
   width: 100%;
+  cursor: pointer;
   transition: background var(--tr-fast);
 }
-.meal-actions button:hover { background: #fef2f0; }
+.meal-actions button:hover { background: var(--clr-brand-light); color: var(--clr-brand); }
 
 /* ═══════════════════════════════════════════════
    ADD MEAL MODAL
@@ -649,6 +655,11 @@ h1 span { color: var(--clr-hero-accent); }
   transition: color var(--tr-fast);
 }
 .modal-close:hover { color: var(--clr-text); }
+
+.log-mode-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 0 0 13px; }
+.log-mode-selector button { border: 1px solid var(--clr-border); background: #fff; border-radius: 8px; height: 36px; font: 600 11px var(--ff-body); color: var(--clr-text-muted); display: flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; }
+.log-mode-selector button.active { background: var(--clr-brand-soft); color: var(--clr-brand); border-color: #e9c5b9; }
+.scan-assist { display: flex; gap: 8px; align-items: center; color: #4f746a; background: #edf6f2; border: 1px solid #d6e9e1; border-radius: 8px; padding: 9px 10px; font-size: 11px; line-height: 1.35; margin: -3px 0 13px; }
 
 /* ═══════════════════════════════════════════════
    WEEKLY CHART
@@ -933,6 +944,13 @@ h1 span { color: var(--clr-hero-accent); }
    ═══════════════════════════════════════════════ */
 
 .coach-page { animation: fadeUp .4s ease both; display: flex; flex-direction: column; height: calc(100vh - 140px); }
+.proactive-nudge { background: linear-gradient(118deg, #314f49, #41645c); color: #fff; border-radius: 13px; padding: 15px 17px; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; box-shadow: 0 8px 22px #24463b20; }
+.nudge-icon { width: 34px; height: 34px; flex: 0 0 auto; display: grid; place-items: center; background: #ffffff19; border-radius: 10px; color: #f1b28d; }
+.proactive-nudge > div:nth-child(2) { display: grid; gap: 2px; flex: 1; }
+.proactive-nudge span { color: #bfd2cc; font-weight: 700; font-size: 9px; letter-spacing: .8px; }
+.proactive-nudge b { font-size: 13px; }
+.proactive-nudge p { margin: 0; color: #d4e2de; font-size: 11px; }
+.proactive-nudge button { background: #f3a478; color: #542c1d; border: 0; border-radius: 8px; min-height: 33px; padding: 0 10px; font: 700 11px var(--ff-body); cursor: pointer; display: flex; align-items: center; gap: 5px; }
 
 .chat-container {
   flex: 1;

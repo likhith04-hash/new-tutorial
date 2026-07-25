@@ -8,9 +8,10 @@ interface MacroRingProps {
   label: string
   color: string
   size?: number
+  unit?: string
 }
 
-export default function MacroRing({ value, total, label, color, size = 91 }: MacroRingProps) {
+export default function MacroRing({ value, total, label, color, size = 91, unit = 'g' }: MacroRingProps) {
   const [animPct, setAnimPct] = useState(0)
 
   useEffect(() => {
@@ -19,6 +20,8 @@ export default function MacroRing({ value, total, label, color, size = 91 }: Mac
     }, 80)
     return () => clearTimeout(t)
   }, [value, total])
+
+  const unitSuffix = unit ? (unit === 'g' ? 'g' : ` ${unit}`) : ''
 
   return (
     <div className="macro">
@@ -31,11 +34,11 @@ export default function MacroRing({ value, total, label, color, size = 91 }: Mac
         }}
       >
         <div className="ring-hole" style={{ width: size - 16, height: size - 16 }}>
-          <b>{value}g</b>
+          <b>{value}{unit === 'g' ? 'g' : ''}</b>
           <small>{label}</small>
         </div>
       </div>
-      <div className="macro-total">of {total}g</div>
+      <div className="macro-total">of {total}{unitSuffix}</div>
     </div>
   )
 }
