@@ -11,11 +11,12 @@ interface SidebarProps {
 }
 
 const links = [
-  { href: '/', label: 'Dashboard', icon: 'grid' },
+  { href: '/dashboard', label: 'Dashboard', icon: 'grid' },
   { href: '/progress', label: 'Progress', icon: 'chart' },
   { href: '/diary', label: 'Food diary', icon: 'fork' },
   { href: '/coach', label: 'AI coach', icon: 'sparkle', badge: 'New' },
   { href: '/goals', label: 'Goals', icon: 'target' },
+  { href: '/', label: 'Home', icon: 'zap' },
 ]
 
 export default function Sidebar({ mobileOpen, onClose }: SidebarProps) {

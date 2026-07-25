@@ -34,13 +34,17 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
 
   return (
     <NutritionProvider>
-      <main className="shell">
-        <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
-        <section className="content">
-          {children}
-        </section>
-        <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
-      </main>
+      {isLandingPage ? (
+        children
+      ) : (
+        <main className="shell">
+          <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+          <section className="content">
+            {children}
+          </section>
+          <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+        </main>
+      )}
     </NutritionProvider>
   )
 }

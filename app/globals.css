@@ -1,5 +1,38 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Hanken+Grotesk:wght@100..900&display=swap');
+
+@theme {
+  --color-primary: #163826;
+  --color-primary-container: #2d4f3c;
+  --color-primary-fixed: #c5ecd2;
+  --color-primary-fixed-dim: #a9cfb7;
+  --color-on-primary: #ffffff;
+  --color-secondary: #974725;
+  --color-secondary-container: #fe9970;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-container: #772f0e;
+  --color-tertiary-fixed: #ffdfa0;
+  --color-background: #fbf9f6;
+  --color-surface: #fbf9f6;
+  --color-surface-container-low: #f5f3f0;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #eae8e5;
+  --color-surface-container-highest: #e4e2df;
+  --color-on-surface: #1b1c1a;
+  --color-on-surface-variant: #424843;
+  --color-outline-variant: #c1c8c1;
+}
+
+.text-display-lg { font-family: 'Newsreader', serif; font-size: 48px; line-height: 56px; letter-spacing: -0.02em; font-weight: 600; }
+.text-headline-lg { font-family: 'Newsreader', serif; font-size: 32px; line-height: 40px; font-weight: 600; }
+.text-headline-md { font-family: 'Newsreader', serif; font-size: 24px; line-height: 32px; font-weight: 500; }
+.text-body-lg { font-family: 'Hanken Grotesk', sans-serif; font-size: 18px; line-height: 28px; font-weight: 400; }
+.text-body-md { font-family: 'Hanken Grotesk', sans-serif; font-size: 16px; line-height: 24px; font-weight: 400; }
+.text-label-caps { font-family: 'Hanken Grotesk', sans-serif; font-size: 12px; line-height: 16px; letter-spacing: 0.08em; font-weight: 700; text-transform: uppercase; }
+.text-data-lg { font-family: 'Hanken Grotesk', sans-serif; font-size: 24px; line-height: 24px; font-weight: 700; }
+.px-container-margin { padding-left: 24px; padding-right: 24px; }
+.py-stack-lg { padding-top: 32px; padding-bottom: 32px; }
+.gap-stack-md { gap: 16px; }
 
 /* ═══════════════════════════════════════════════
    DESIGN SYSTEM — CSS Custom Properties
