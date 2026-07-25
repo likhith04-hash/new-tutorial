@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..800;1,6..72,400..800&family=Hanken+Grotesk:wght@100..900&display=swap');
+@import "tailwindcss";
 
 @theme {
   --color-primary: #163826;
@@ -12,6 +12,7 @@
   --color-on-secondary: #ffffff;
   --color-on-secondary-container: #772f0e;
   --color-tertiary-fixed: #ffdfa0;
+  --color-tertiary-container: #5d4400;
   --color-background: #fbf9f6;
   --color-surface: #fbf9f6;
   --color-surface-container-low: #f5f3f0;
@@ -21,6 +22,21 @@
   --color-on-surface: #1b1c1a;
   --color-on-surface-variant: #424843;
   --color-outline-variant: #c1c8c1;
+  --color-outline: #727973;
+
+  --spacing-container-margin: 24px;
+  --spacing-stack-sm: 8px;
+  --spacing-stack-md: 16px;
+  --spacing-stack-lg: 32px;
+  --spacing-gutter: 16px;
+
+  --font-headline-md: 'Newsreader', serif;
+  --font-headline-lg: 'Newsreader', serif;
+  --font-display-lg: 'Newsreader', serif;
+  --font-body-lg: 'Hanken Grotesk', sans-serif;
+  --font-body-md: 'Hanken Grotesk', sans-serif;
+  --font-label-caps: 'Hanken Grotesk', sans-serif;
+  --font-data-lg: 'Hanken Grotesk', sans-serif;
 }
 
 .text-display-lg { font-family: 'Newsreader', serif; font-size: 48px; line-height: 56px; letter-spacing: -0.02em; font-weight: 600; }
