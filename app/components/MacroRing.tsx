@@ -11,7 +11,7 @@ interface MacroRingProps {
   unit?: string
 }
 
-export default function MacroRing({ value, total, label, color, size = 91, unit = 'g' }: MacroRingProps) {
+export default function MacroRing({ value, total, label, color, size = 91, unit }: MacroRingProps) {
   const [animPct, setAnimPct] = useState(0)
 
   useEffect(() => {
@@ -21,7 +21,9 @@ export default function MacroRing({ value, total, label, color, size = 91, unit 
     return () => clearTimeout(t)
   }, [value, total])
 
-  const unitSuffix = unit ? (unit === 'g' ? 'g' : ` ${unit}`) : ''
+  const isKcal = unit === 'kcal' || label.toLowerCase() === 'kcal' || label.toLowerCase() === 'calories'
+  const valueUnit = isKcal ? '' : (unit || 'g')
+  const totalSuffix = isKcal ? ' kcal' : (valueUnit ? ` ${valueUnit}` : '')
 
   return (
     <div
@@ -29,7 +31,7 @@ export default function MacroRing({ value, total, label, color, size = 91, unit 
       role="progressbar"
       aria-valuenow={value}
       aria-valuemax={total}
-      aria-label={`${label}: ${value} of ${total}${unitSuffix}`}
+      aria-label={`${label}: ${value} of ${total}${totalSuffix}`}
     >
       <div
         className="ring"
@@ -40,11 +42,11 @@ export default function MacroRing({ value, total, label, color, size = 91, unit 
         }}
       >
         <div className="ring-hole" style={{ width: size - 16, height: size - 16 }}>
-          <b>{value}{unit === 'g' ? 'g' : ''}</b>
+          <b>{value}{valueUnit}</b>
           <small>{label}</small>
         </div>
       </div>
-      <div className="macro-total">of {total}{unitSuffix}</div>
+      <div className="macro-total">of {total}{totalSuffix}</div>
     </div>
   )
 }

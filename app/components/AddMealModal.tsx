@@ -230,6 +230,8 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
         </div>
 
         <input
+          id="meal-name-input"
+          aria-label="Meal name"
           autoFocus
           value={name}
           onChange={e => setName(e.target.value)}
@@ -238,23 +240,23 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
 
         <div className="input-row">
           <div>
-            <label className="input-label">Calories</label>
-            <input type="number" value={calories} onChange={e => setCalories(+e.target.value)} min={0} />
+            <label htmlFor="meal-cals-input" className="input-label">Calories</label>
+            <input id="meal-cals-input" type="number" value={calories} onChange={e => setCalories(+e.target.value)} min={0} />
           </div>
           <div>
-            <label className="input-label">Protein (g)</label>
-            <input type="number" value={protein} onChange={e => setProtein(+e.target.value)} min={0} />
+            <label htmlFor="meal-protein-input" className="input-label">Protein (g)</label>
+            <input id="meal-protein-input" type="number" value={protein} onChange={e => setProtein(+e.target.value)} min={0} />
           </div>
         </div>
 
         <div className="input-row">
           <div>
-            <label className="input-label">Carbs (g)</label>
-            <input type="number" value={carbs} onChange={e => setCarbs(+e.target.value)} min={0} />
+            <label htmlFor="meal-carbs-input" className="input-label">Carbs (g)</label>
+            <input id="meal-carbs-input" type="number" value={carbs} onChange={e => setCarbs(+e.target.value)} min={0} />
           </div>
           <div>
-            <label className="input-label">Fat (g)</label>
-            <input type="number" value={fat} onChange={e => setFat(+e.target.value)} min={0} />
+            <label htmlFor="meal-fat-input" className="input-label">Fat (g)</label>
+            <input id="meal-fat-input" type="number" value={fat} onChange={e => setFat(+e.target.value)} min={0} />
           </div>
         </div>
 

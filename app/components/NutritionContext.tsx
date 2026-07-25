@@ -75,6 +75,7 @@ export interface NutritionContextType {
   updateGoals: (patch: Partial<UserGoals>) => void
   updateProfile: (patch: Partial<UserProfile>) => void
   addChatMessage: (msg: Omit<ChatMessage, 'id' | 'timestamp'>) => void
+  updateLastChatMessage: (content: string) => void
   clearAllData: () => void
 
   /* computed */
@@ -264,6 +265,17 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
     setChatMessages(prev => [...prev, { ...msg, id: uid(), timestamp: Date.now() }])
   }, [])
 
+  const updateLastChatMessage = useCallback((content: string) => {
+    setChatMessages(prev => {
+      const updated = [...prev]
+      const lastIdx = updated.length - 1
+      if (lastIdx >= 0 && updated[lastIdx].role === 'assistant') {
+        updated[lastIdx] = { ...updated[lastIdx], content }
+      }
+      return updated
+    })
+  }, [])
+
   const clearAllData = useCallback(() => {
     setMeals([])
     setWaterLogs({})
@@ -324,7 +336,7 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
   const value: NutritionContextType = {
     meals, waterLogs, weightEntries, goals, profile, chatMessages,
     addMeal, repeatMeal, updateMeal, removeMeal, setWater: setWaterFn, addWater, addWeightEntry,
-    updateGoals, updateProfile, addChatMessage, clearAllData,
+    updateGoals, updateProfile, addChatMessage, updateLastChatMessage, clearAllData,
     getMealsForDate, getWaterForDate, getCaloriesForDate, getMacrosForDate, getLoggingStreak,
   }
 

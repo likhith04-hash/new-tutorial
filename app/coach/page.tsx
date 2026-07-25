@@ -7,7 +7,7 @@ import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
 
 function CoachContent() {
-  const { chatMessages, addChatMessage, goals, getCaloriesForDate, getMacrosForDate, profile } = useNutrition()
+  const { chatMessages, addChatMessage, updateLastChatMessage, goals, getCaloriesForDate, getMacrosForDate, profile } = useNutrition()
   const searchParams = useSearchParams()
   const initialPromptProcessed = useRef(false)
 
@@ -59,17 +59,59 @@ function CoachContent() {
     return `Thanks for reaching out, ${firstName}! Based on your current ${goalType} plan (${goals.calories} kcal target), I'm here to analyze your logs, suggest customized recipes, or help you adjust your macros. What would you like to work on?`
   }, [goals, getCaloriesForDate, getMacrosForDate, profile])
 
-  const handleSend = useCallback((text: string) => {
+  const handleSend = useCallback(async (text: string) => {
     if (!text.trim() || isTyping) return
-    addChatMessage({ role: 'user', content: text.trim() })
+    const userMsg = text.trim()
+    addChatMessage({ role: 'user', content: userMsg })
     setInput('')
     setIsTyping(true)
 
-    setTimeout(() => {
+    const todayStr = new Date().toISOString().slice(0, 10)
+    const todayCals = getCaloriesForDate(todayStr)
+    const todayMacros = getMacrosForDate(todayStr)
+
+    try {
+      const res = await fetch('/api/coach', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: userMsg,
+          goalType: goals.goalType,
+          name: profile.name,
+          caloriesLeft: goals.calories - todayCals,
+          proteinLeft: Math.max(0, goals.proteinG - todayMacros.protein),
+          todayMacros,
+          goals,
+        }),
+      })
+
+      if (!res.ok || !res.body) {
+        setIsTyping(false)
+        addChatMessage({ role: 'assistant', content: generateResponse(userMsg) })
+        return
+      }
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let streamedContent = ''
       setIsTyping(false)
-      addChatMessage({ role: 'assistant', content: generateResponse(text) })
-    }, 1200 + Math.random() * 600)
-  }, [isTyping, addChatMessage, generateResponse])
+
+      // Add empty assistant message to accumulate stream
+      const tempId = Math.random().toString(36).slice(2, 10)
+      addChatMessage({ role: 'assistant', content: '' })
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        const chunk = decoder.decode(value, { stream: true })
+        streamedContent += chunk
+        updateLastChatMessage(streamedContent)
+      }
+    } catch {
+      setIsTyping(false)
+      addChatMessage({ role: 'assistant', content: generateResponse(userMsg) })
+    }
+  }, [isTyping, addChatMessage, generateResponse, goals, getCaloriesForDate, getMacrosForDate, profile.name])
 
   // Handle URL prompt query param on mount
   useEffect(() => {

@@ -71,36 +71,36 @@ export default function SettingsPage() {
           </div>
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label">Name</label>
-              <input className="form-input" value={local.name} onChange={e => setText('name', e.target.value)} onBlur={save} />
+              <label htmlFor="settings-name" className="form-label">Name</label>
+              <input id="settings-name" className="form-input" value={local.name} onChange={e => setText('name', e.target.value)} onBlur={save} />
             </div>
             <div className="form-group">
-              <label className="form-label">Email</label>
-              <input className="form-input" type="email" value={local.email} onChange={e => setText('email', e.target.value)} onBlur={save} />
+              <label htmlFor="settings-email" className="form-label">Email</label>
+              <input id="settings-email" className="form-input" type="email" value={local.email} onChange={e => setText('email', e.target.value)} onBlur={save} />
             </div>
           </div>
           <div className="form-row-3">
             <div className="form-group">
-              <label className="form-label">Height (cm)</label>
-              <input className="form-input" type="number" value={local.heightCm} onChange={e => setNum('heightCm', e.target.value)} onBlur={save} />
+              <label htmlFor="settings-height" className="form-label">Height (cm)</label>
+              <input id="settings-height" className="form-input" type="number" value={local.heightCm} onChange={e => setNum('heightCm', e.target.value)} onBlur={save} />
             </div>
             <div className="form-group">
-              <label className="form-label">Weight (kg)</label>
-              <input className="form-input" type="number" value={local.weightKg} onChange={e => setNum('weightKg', e.target.value)} onBlur={save} />
+              <label htmlFor="settings-weight" className="form-label">Weight (kg)</label>
+              <input id="settings-weight" className="form-input" type="number" value={local.weightKg} onChange={e => setNum('weightKg', e.target.value)} onBlur={save} />
             </div>
             <div className="form-group">
-              <label className="form-label">Target Weight (kg)</label>
-              <input className="form-input" type="number" value={local.targetWeightKg} onChange={e => setNum('targetWeightKg', e.target.value)} onBlur={save} />
+              <label htmlFor="settings-target-weight" className="form-label">Target Weight (kg)</label>
+              <input id="settings-target-weight" className="form-input" type="number" value={local.targetWeightKg} onChange={e => setNum('targetWeightKg', e.target.value)} onBlur={save} />
             </div>
           </div>
           <div className="form-group">
-            <label className="form-label">Allergies & Restrictions</label>
+            <label htmlFor="settings-allergies" className="form-label">Allergies & Restrictions</label>
             <div className="tags">
               {local.allergies.map(a => (
                 <span key={a} className="tag">{a}<button className="tag-remove" onClick={() => removeAllergy(a)}>×</button></span>
               ))}
             </div>
-            <input className="tag-input" placeholder="Type and press Enter…" value={newAllergy} onChange={e => setNewAllergy(e.target.value)} onKeyDown={addAllergy} onBlur={save} />
+            <input id="settings-allergies" className="tag-input" placeholder="Type and press Enter…" value={newAllergy} onChange={e => setNewAllergy(e.target.value)} onKeyDown={addAllergy} onBlur={save} />
           </div>
         </div>
 
