@@ -52,7 +52,7 @@ export default function LandingPage() {
   ]
 
   return (
-    <div className="bg-[#0b1712] text-slate-100 antialiased min-h-screen selection:bg-emerald-500 selection:text-white">
+    <div className="bg-[#0b1712] text-slate-100 antialiased min-h-screen selection:bg-emerald-500 selection:text-white overflow-x-hidden">
       {/* Google Fonts */}
       <link
         href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
@@ -161,7 +161,7 @@ export default function LandingPage() {
           </div>
 
           {/* Hero App Mockup Card */}
-          <div className="lg:col-span-6 relative animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
+          <div className="lg:col-span-6 relative pb-14 md:pb-10 animate-on-scroll transition-all duration-700 ease-out opacity-0 translate-y-8">
             <div className="bg-[#142920] border border-emerald-700/40 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-emerald-950/80 relative">
               {/* Header */}
               <div className="flex justify-between items-start mb-8 border-b border-emerald-900/50 pb-6">
