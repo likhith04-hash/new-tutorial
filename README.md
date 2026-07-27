@@ -9,7 +9,7 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-Open `http://localhost:3000`.
+Open `https://nourish-ai-six.vercel.app`.
 
 ## Architecture
 
