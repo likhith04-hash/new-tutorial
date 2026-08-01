@@ -1,6 +1,8 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
+import { daysAgoISO, todayISO } from '@/app/lib/date'
+import { initialsFrom, sumCalories, sumMacros, type MacroTotals } from '@/app/lib/nutrition'
 
 /* ───────── Types ───────── */
 
@@ -82,17 +84,15 @@ export interface NutritionContextType {
   getMealsForDate: (date: string) => Meal[]
   getWaterForDate: (date: string) => number
   getCaloriesForDate: (date: string) => number
-  getMacrosForDate: (date: string) => { protein: number; carbs: number; fat: number }
+  getMacrosForDate: (date: string) => MacroTotals
   getLoggingStreak: () => number
 }
 
 /* ───────── Helpers ───────── */
 
-const today = () => new Date().toISOString().slice(0, 10)
+const today = todayISO
+const daysAgo = daysAgoISO
 const uid = () => Math.random().toString(36).slice(2, 10)
-const daysAgo = (n: number) => {
-  const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10)
-}
 
 /* ───────── Seed Data ───────── */
 
@@ -259,15 +259,7 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = useCallback((patch: Partial<UserProfile>) => {
     setProfile(prev => {
-      let initials = prev.initials
-      if (patch.name && patch.name.trim()) {
-        const parts = patch.name.trim().split(/\s+/).filter(Boolean)
-        if (parts.length === 1) {
-          initials = parts[0].slice(0, 2).toUpperCase()
-        } else if (parts.length > 1) {
-          initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-        }
-      }
+      const initials = patch.name && patch.name.trim() ? initialsFrom(patch.name, prev.initials) : prev.initials
       const updated = { ...prev, ...patch, initials: patch.initials || initials }
       if (typeof document !== 'undefined' && updated.theme) {
         document.documentElement.setAttribute('data-theme', updated.theme)
@@ -308,43 +300,17 @@ export function NutritionProvider({ children }: { children: ReactNode }) {
   const getWaterForDate = useCallback((date: string) => waterLogs[date] ?? 0, [waterLogs])
 
   const getCaloriesForDate = useCallback((date: string) =>
-    meals.filter(m => m.date === date).reduce((s, m) => s + m.calories, 0)
+    sumCalories(meals.filter(m => m.date === date))
   , [meals])
 
-  const getMacrosForDate = useCallback((date: string) => {
-    const dm = meals.filter(m => m.date === date)
-    return {
-      protein: dm.reduce((s, m) => s + m.protein, 0),
-      carbs: dm.reduce((s, m) => s + m.carbs, 0),
-      fat: dm.reduce((s, m) => s + m.fat, 0),
-    }
-  }, [meals])
+  const getMacrosForDate = useCallback((date: string) =>
+    sumMacros(meals.filter(m => m.date === date))
+  , [meals])
 
   const getLoggingStreak = useCallback(() => {
-    let streak = 0
-    const todayStr = today()
-    let checkDate = new Date()
-    
-    // Check today first. If no meals today, check starting from yesterday
-    const todayMeals = meals.filter(m => m.date === todayStr)
-    if (todayMeals.length > 0) {
-      streak++
-      checkDate.setDate(checkDate.getDate() - 1)
-    } else {
-      checkDate.setDate(checkDate.getDate() - 1)
-    }
-
-    while (true) {
-      const dStr = checkDate.toISOString().slice(0, 10)
-      const dayMeals = meals.filter(m => m.date === dStr)
-      if (dayMeals.length > 0) {
-        streak++
-        checkDate.setDate(checkDate.getDate() - 1)
-      } else {
-        break
-      }
-    }
-
+    const logged = new Set(meals.map(m => m.date))
+    let streak = logged.has(today()) ? 1 : 0
+    for (let back = 1; logged.has(daysAgo(back)); back++) streak++
     return streak
   }, [meals])
 

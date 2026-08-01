@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useNutrition } from '@/app/components/NutritionContext'
+import { useDelayedValue } from '@/app/lib/hooks'
+import { percentOf } from '@/app/lib/nutrition'
 
 interface CalorieHeroProps { date: string }
 
@@ -10,13 +11,8 @@ export default function CalorieHero({ date }: CalorieHeroProps) {
   const calories = getCaloriesForDate(date)
   const target = goals.calories
   const remaining = Math.max(0, target - calories)
-  const pct = Math.min(100, Math.round((calories / target) * 100))
-
-  const [animWidth, setAnimWidth] = useState(0)
-  useEffect(() => {
-    const t = setTimeout(() => setAnimWidth(pct), 80)
-    return () => clearTimeout(t)
-  }, [pct])
+  const pct = Math.min(100, percentOf(calories, target))
+  const animWidth = useDelayedValue(pct, 0)
 
   return (
     <section className="hero-card">

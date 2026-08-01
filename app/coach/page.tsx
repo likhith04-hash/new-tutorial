@@ -5,6 +5,9 @@ import { useSearchParams } from 'next/navigation'
 import Header from '@/app/components/Header'
 import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
+import { generateCoachReply } from '@/app/lib/coach'
+import { firstName as firstNameOf, lastNDays, todayISO } from '@/app/lib/date'
+import { average } from '@/app/lib/nutrition'
 
 function CoachContent() {
   const { chatMessages, addChatMessage, updateLastChatMessage, goals, getCaloriesForDate, getMacrosForDate, profile } = useNutrition()
@@ -18,45 +21,17 @@ function CoachContent() {
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [chatMessages, isTyping])
 
   const generateResponse = useCallback((text: string) => {
-    const lower = text.toLowerCase()
-    const today = new Date().toISOString().slice(0, 10)
-    const todayMacros = getMacrosForDate(today)
-    const todayCals = getCaloriesForDate(today)
-    const calsLeft = goals.calories - todayCals
-    const goalType = goals.goalType // 'lose' | 'maintain' | 'gain'
-    const firstName = profile.name.split(' ')[0]
-
-    if (lower.includes('dinner')) {
-      if (goalType === 'lose') {
-        return `Hey ${firstName}! Since your primary goal is weight loss, I'd suggest a volume-dense, calorie-conscious dinner (${Math.min(500, Math.max(350, calsLeft))} kcal):\n\n🥗 Grilled Chicken Salad with Olive Oil dressing, or\n🐟 Baked Salmon with Steamed Broccoli.\n\nThis gives you ~38g of protein while keeping a healthy calorie deficit!`
-      } else if (goalType === 'gain') {
-        return `Hey ${firstName}! Since you're working on muscle gain, aim for a hearty dinner (~${Math.max(650, calsLeft)} kcal):\n\n🥩 Lean Steak or Tofu Grain Bowl with Quinoa, Avocado, and Roasted Veggies.\n\nThis packs ~45g of protein and quality complex carbs for recovery! 💪`
-      } else {
-        return `Based on your ${goals.calories} kcal target, here's a balanced dinner idea (${Math.max(400, calsLeft)} kcal):\n\n🥘 Chicken or Paneer Stir-Fry with mixed veggies and brown rice. Great balance of protein, carbs, and healthy fats!`
-      }
-    }
-
-    if (lower.includes('protein')) {
-      const pct = Math.round((todayMacros.protein / goals.proteinG) * 100)
-      const pLeft = Math.max(0, goals.proteinG - todayMacros.protein)
-      return `Looking at today's log, you've consumed ${todayMacros.protein}g of protein (${pct}% of your ${goals.proteinG}g target). You still need ${pLeft}g more today.\n\nQuick high-protein additions:\n• 🥣 200g Greek Yogurt (18g P)\n• 🥚 2 Hard Boiled Eggs (12g P)\n• 🥤 1 Scoop Whey Protein (24g P)`
-    }
-
-    if (lower.includes('snack')) {
-      return `Here are top snack ideas aligned with your ${goalType.toUpperCase()} goal:\n\n1. 🍎 Apple + 1 tbsp Almond Butter (180 kcal, 4g P)\n2. 🥣 Low-fat Cottage Cheese or Greek Yogurt (140 kcal, 15g P)\n3. 🥜 Handful of Roasted Almonds & Walnuts (170 kcal, 6g P)\n4. 🥚 Edamame pods with sea salt (130 kcal, 11g P)`
-    }
-
-    if (lower.includes('week') || lower.includes('review')) {
-      const avg = Math.round(Array.from({ length: 7 }, (_, i) => {
-        const d = new Date(); d.setDate(d.getDate() - i)
-        return getCaloriesForDate(d.toISOString().slice(0, 10))
-      }).reduce((s, v) => s + v, 0) / 7)
-      
-      const status = avg < goals.calories - 100 ? 'in a slight deficit' : avg > goals.calories + 100 ? 'in a slight surplus' : 'right on target'
-      return `📊 7-Day Review for ${profile.name}:\n• Average Daily Intake: ${avg} kcal (${status} relative to your ${goals.calories} kcal ${goalType} goal).\n• Protein Consistency: Good!\n• Recommendation: Keep tracking your meals daily for maximum results.`
-    }
-
-    return `Thanks for reaching out, ${firstName}! Based on your current ${goalType} plan (${goals.calories} kcal target), I'm here to analyze your logs, suggest customized recipes, or help you adjust your macros. What would you like to work on?`
+    const today = todayISO()
+    return generateCoachReply({
+      prompt: text,
+      name: profile.name,
+      goalType: goals.goalType,
+      calorieTarget: goals.calories,
+      proteinTarget: goals.proteinG,
+      caloriesLeft: goals.calories - getCaloriesForDate(today),
+      todayMacros: getMacrosForDate(today),
+      weeklyAvgCalories: average(lastNDays(7).map(getCaloriesForDate)),
+    })
   }, [goals, getCaloriesForDate, getMacrosForDate, profile])
 
   const handleSend = useCallback(async (text: string) => {
@@ -66,7 +41,7 @@ function CoachContent() {
     setInput('')
     setIsTyping(true)
 
-    const todayStr = new Date().toISOString().slice(0, 10)
+    const todayStr = todayISO()
     const todayCals = getCaloriesForDate(todayStr)
     const todayMacros = getMacrosForDate(todayStr)
 
@@ -82,6 +57,7 @@ function CoachContent() {
           proteinLeft: Math.max(0, goals.proteinG - todayMacros.protein),
           todayMacros,
           goals,
+          weeklyAvgCalories: average(lastNDays(7).map(getCaloriesForDate)),
         }),
       })
 
@@ -97,7 +73,6 @@ function CoachContent() {
       setIsTyping(false)
 
       // Add empty assistant message to accumulate stream
-      const tempId = Math.random().toString(36).slice(2, 10)
       addChatMessage({ role: 'assistant', content: '' })
 
       while (true) {
@@ -129,8 +104,8 @@ function CoachContent() {
     'Review my week',
   ]
 
-  const firstName = profile.name.split(' ')[0]
-  const today = new Date().toISOString().slice(0, 10)
+  const firstName = firstNameOf(profile.name)
+  const today = todayISO()
   const caloriesLeft = goals.calories - getCaloriesForDate(today)
   const proteinLeft = Math.max(0, goals.proteinG - getMacrosForDate(today).protein)
   const goalCopy = goals.goalType === 'lose' ? 'a calorie-conscious, high-protein dinner' : goals.goalType === 'gain' ? 'a protein-rich, energy-dense dinner' : 'a balanced dinner that keeps you on target'

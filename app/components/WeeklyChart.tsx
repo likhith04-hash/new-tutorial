@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useMounted } from '@/app/lib/hooks';
 
 interface DataPoint {
   label: string;
@@ -21,13 +22,8 @@ export default function WeeklyChart({
   color = '#e5966b',
   title,
 }: WeeklyChartProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setMounted(true), 50);
-    return () => clearTimeout(timer);
-  }, []);
 
   const maxValue = Math.max(...data.map(d => d.max), 1);
   const chartHeight = height - 40; // reserve space for labels

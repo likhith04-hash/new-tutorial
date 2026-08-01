@@ -4,12 +4,14 @@ import { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
+import { lastNDays, todayISO } from '@/app/lib/date'
+import { average, percentOf } from '@/app/lib/nutrition'
 
 export default function SmartNudge() {
   const router = useRouter()
   const { goals, meals, waterLogs, getLoggingStreak, getCaloriesForDate, getMacrosForDate, getWaterForDate } = useNutrition()
   
-  const today = new Date().toISOString().slice(0, 10)
+  const today = todayISO()
   const currentHour = new Date().getHours()
   const streak = getLoggingStreak()
 
@@ -43,16 +45,8 @@ export default function SmartNudge() {
     }
 
     // 3. Computed 7-day protein pattern
-    let proteinLowDays = 0
-    for (let i = 0; i < 7; i++) {
-      const d = new Date()
-      d.setDate(d.getDate() - i)
-      const dStr = d.toISOString().slice(0, 10)
-      const m = getMacrosForDate(dStr)
-      if (m.protein < goals.proteinG * 0.8) {
-        proteinLowDays++
-      }
-    }
+    const week = lastNDays(7)
+    const proteinLowDays = week.filter(d => getMacrosForDate(d).protein < goals.proteinG * 0.8).length
 
     if (proteinLowDays >= 3) {
       return {
@@ -77,14 +71,8 @@ export default function SmartNudge() {
     }
 
     // 5. Default weekly average insight
-    let sumCals = 0
-    for (let i = 0; i < 7; i++) {
-      const d = new Date()
-      d.setDate(d.getDate() - i)
-      sumCals += getCaloriesForDate(d.toISOString().slice(0, 10))
-    }
-    const avgCals = Math.round(sumCals / 7)
-    const pct = Math.round((avgCals / goals.calories) * 100)
+    const avgCals = average(week.map(getCaloriesForDate))
+    const pct = percentOf(avgCals, goals.calories)
 
     return {
       type: 'overview',

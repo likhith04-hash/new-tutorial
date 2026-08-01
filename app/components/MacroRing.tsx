@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useDelayedValue } from '@/app/lib/hooks'
+import { percentOf } from '@/app/lib/nutrition'
 
 interface MacroRingProps {
   value: number
@@ -12,14 +13,7 @@ interface MacroRingProps {
 }
 
 export default function MacroRing({ value, total, label, color, size = 91, unit }: MacroRingProps) {
-  const [animPct, setAnimPct] = useState(0)
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      setAnimPct(total > 0 ? Math.min(100, Math.round((value / total) * 100)) : 0)
-    }, 80)
-    return () => clearTimeout(t)
-  }, [value, total])
+  const animPct = useDelayedValue(Math.min(100, percentOf(value, total)), 0)
 
   const isKcal = unit === 'kcal' || label.toLowerCase() === 'kcal' || label.toLowerCase() === 'calories'
   const valueUnit = isKcal ? '' : (unit || 'g')

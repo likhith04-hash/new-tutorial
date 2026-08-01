@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Icon from '@/app/components/Icon'
 import { useNutrition, type Meal, type MealTone } from '@/app/components/NutritionContext'
+import { todayISO } from '@/app/lib/date'
 
 interface AddMealModalProps {
   open: boolean
@@ -12,6 +13,8 @@ interface AddMealModalProps {
 }
 
 const TONES: MealTone[] = ['peach', 'violet', 'green', 'coral', 'blue', 'amber']
+
+type MealDraft = Pick<Meal, 'name' | 'type' | 'calories' | 'protein' | 'carbs' | 'fat' | 'detail'>
 
 const PRESETS = [
   { name: 'Oatmeal & Berries', type: 'Breakfast' as const, calories: 320, protein: 12, carbs: 54, fat: 6, detail: 'Rolled oats, blueberries, honey' },
@@ -70,6 +73,17 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
 
   if (!open) return null
 
+  /** Fills the form from a preset, photo estimate, or barcode match. */
+  const applyDraft = (draft: MealDraft) => {
+    setName(draft.name)
+    setType(draft.type)
+    setCalories(draft.calories)
+    setProtein(draft.protein)
+    setCarbs(draft.carbs)
+    setFat(draft.fat)
+    setDetail(draft.detail)
+  }
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -79,14 +93,7 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
       setIsAnalyzing(true)
       setTimeout(() => {
         setIsAnalyzing(false)
-        const est = DEMO_PHOTO_ESTIMATES[Math.floor(Math.random() * DEMO_PHOTO_ESTIMATES.length)]
-        setName(est.name)
-        setType(est.type)
-        setCalories(est.calories)
-        setProtein(est.protein)
-        setCarbs(est.carbs)
-        setFat(est.fat)
-        setDetail(est.detail)
+        applyDraft(DEMO_PHOTO_ESTIMATES[Math.floor(Math.random() * DEMO_PHOTO_ESTIMATES.length)])
       }, 1200)
     }
     reader.readAsDataURL(file)
@@ -97,29 +104,21 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
     setIsAnalyzing(true)
     setTimeout(() => {
       setIsAnalyzing(false)
-      setName('High-Protein Greek Yogurt (170g)')
-      setType('Snack')
-      setCalories(145)
-      setProtein(18)
-      setCarbs(11)
-      setFat(3)
-      setDetail('Barcode matched · OpenFoodFacts ID #890123')
+      applyDraft({
+        name: 'High-Protein Greek Yogurt (170g)',
+        type: 'Snack',
+        calories: 145,
+        protein: 18,
+        carbs: 11,
+        fat: 3,
+        detail: 'Barcode matched · OpenFoodFacts ID #890123',
+      })
     }, 800)
-  }
-
-  const selectPreset = (p: typeof PRESETS[0]) => {
-    setName(p.name)
-    setType(p.type)
-    setCalories(p.calories)
-    setProtein(p.protein)
-    setCarbs(p.carbs)
-    setFat(p.fat)
-    setDetail(p.detail)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const todayStr = new Date().toISOString().slice(0, 10)
+    const todayStr = todayISO()
 
     if (editMeal) {
       updateMeal(editMeal.id, {
@@ -203,7 +202,7 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
                 <button
                   key={idx}
                   type="button"
-                  onClick={() => selectPreset(p)}
+                  onClick={() => applyDraft(p)}
                   style={{
                     fontSize: 11,
                     padding: '4px 9px',

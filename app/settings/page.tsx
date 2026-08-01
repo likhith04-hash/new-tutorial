@@ -1,18 +1,23 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Header from '@/app/components/Header'
 import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
+import { useSyncedState } from '@/app/lib/hooks'
 
 export default function SettingsPage() {
   const { profile, updateProfile, clearAllData, meals, waterLogs, weightEntries, goals } = useNutrition()
-  const [local, setLocal] = useState(profile)
+  const [local, setLocal] = useSyncedState(profile)
   const [newAllergy, setNewAllergy] = useState('')
 
-  useEffect(() => { setLocal(profile) }, [profile])
-
   const save = () => updateProfile(local)
+
+  const applyProfile = (patch: Partial<typeof profile>) => {
+    const updated = { ...local, ...patch }
+    setLocal(updated)
+    updateProfile(updated)
+  }
 
   const setText = (field: string, value: string) => {
     setLocal(prev => ({ ...prev, [field]: value }))
@@ -34,9 +39,7 @@ export default function SettingsPage() {
   }
 
   const toggleNotif = (key: keyof typeof local.notifications) => {
-    const updated = { ...local, notifications: { ...local.notifications, [key]: !local.notifications[key] } }
-    setLocal(updated)
-    updateProfile(updated)
+    applyProfile({ notifications: { ...local.notifications, [key]: !local.notifications[key] } })
   }
 
   const handleExport = () => {
@@ -133,11 +136,7 @@ export default function SettingsPage() {
               </div>
               <button
                 className="add full"
-                onClick={() => {
-                  const updated = { ...local, plan: 'Pro Plan' }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
+                onClick={() => applyProfile({ plan: 'Pro Plan' })}
               >
                 <Icon name="sparkle" size={16} /> Upgrade to Nourish Pro ($9.99/mo)
               </button>
@@ -149,11 +148,7 @@ export default function SettingsPage() {
               </p>
               <button
                 style={{ fontSize: 12, background: 'none', border: '1px solid var(--clr-border)', padding: '6px 12px', borderRadius: 6, cursor: 'pointer' }}
-                onClick={() => {
-                  const updated = { ...local, plan: 'Free plan' }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
+                onClick={() => applyProfile({ plan: 'Free plan' })}
               >
                 Manage Subscription
               </button>
@@ -169,21 +164,13 @@ export default function SettingsPage() {
             <div className="option-toggle">
               <button
                 className={local.units === 'metric' ? 'active' : ''}
-                onClick={() => {
-                  const updated = { ...local, units: 'metric' as const }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
+                onClick={() => applyProfile({ units: 'metric' })}
               >
                 Metric
               </button>
               <button
                 className={local.units === 'imperial' ? 'active' : ''}
-                onClick={() => {
-                  const updated = { ...local, units: 'imperial' as const }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
+                onClick={() => applyProfile({ units: 'imperial' })}
               >
                 Imperial
               </button>
@@ -194,21 +181,13 @@ export default function SettingsPage() {
             <div className="option-toggle">
               <button
                 className={local.theme === 'light' ? 'active' : ''}
-                onClick={() => {
-                  const updated = { ...local, theme: 'light' as const }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
+                onClick={() => applyProfile({ theme: 'light' })}
               >
                 <Icon name="sun" size={14} /> Light
               </button>
               <button
                 className={local.theme === 'dark' ? 'active' : ''}
-                onClick={() => {
-                  const updated = { ...local, theme: 'dark' as const }
-                  setLocal(updated)
-                  updateProfile(updated)
-                }}
+                onClick={() => applyProfile({ theme: 'dark' })}
               >
                 <Icon name="moon" size={14} /> Dark
               </button>

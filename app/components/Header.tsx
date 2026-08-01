@@ -2,6 +2,7 @@
 
 import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
+import { firstName } from '@/app/lib/date'
 
 interface HeaderProps {
   onMenuToggle?: () => void
@@ -15,7 +16,7 @@ export default function Header({ onMenuToggle, onLogFood, onSearch }: HeaderProp
   const hour = new Date().getHours()
   const greeting = hour >= 5 && hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
   const dateStr = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date()).toUpperCase()
-  const firstName = profile.name.split(' ')[0]
+  const greetingName = firstName(profile.name)
 
   return (
     <header>
@@ -44,7 +45,7 @@ export default function Header({ onMenuToggle, onLogFood, onSearch }: HeaderProp
         </div>
         <div>
           <p className="eyebrow">{dateStr}</p>
-          <h1>{greeting}, {firstName} <span style={{ fontSize: '16px' }}>✦</span></h1>
+          <h1>{greeting}, {greetingName} <span style={{ fontSize: '16px' }}>✦</span></h1>
         </div>
       </div>
       <div className="header-actions">

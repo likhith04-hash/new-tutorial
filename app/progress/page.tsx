@@ -6,41 +6,33 @@ import WeeklyChart from '@/app/components/WeeklyChart'
 import MacroRing from '@/app/components/MacroRing'
 import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
+import { lastNDays, shortWeekday } from '@/app/lib/date'
+import { average, percentOf, scaleLinePoints } from '@/app/lib/nutrition'
 
 export default function ProgressPage() {
   const { weightEntries, getCaloriesForDate, getMacrosForDate, goals, getLoggingStreak, getWaterForDate, meals } = useNutrition()
 
   const streak = getLoggingStreak()
 
-  const last7Days = useMemo(() =>
-    Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(); d.setDate(d.getDate() - (6 - i))
-      return d.toISOString().slice(0, 10)
-    }), [])
+  const last7Days = useMemo(() => lastNDays(7), [])
 
   const { weeklyData, avgCalories, avgProtein, avgCarbs, avgFat, waterGoalCount, breakfastCount } = useMemo(() => {
-    let totalCal = 0, totalP = 0, totalC = 0, totalF = 0
-    let wCount = 0, bCount = 0
-
-    const wd = last7Days.map(date => {
-      const cals = getCaloriesForDate(date)
-      const m = getMacrosForDate(date)
-      totalCal += cals; totalP += m.protein; totalC += m.carbs; totalF += m.fat
-      
-      if (getWaterForDate(date) >= goals.waterGlasses) wCount++
-      if (meals.some(item => item.date === date && item.type === 'Breakfast')) bCount++
-
-      return { label: new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }), value: cals, max: goals.calories }
-    })
+    const days = last7Days.map(date => ({
+      date,
+      calories: getCaloriesForDate(date),
+      macros: getMacrosForDate(date),
+      waterMet: getWaterForDate(date) >= goals.waterGlasses,
+      hasBreakfast: meals.some(item => item.date === date && item.type === 'Breakfast'),
+    }))
 
     return {
-      weeklyData: wd,
-      avgCalories: Math.round(totalCal / 7),
-      avgProtein: Math.round(totalP / 7),
-      avgCarbs: Math.round(totalC / 7),
-      avgFat: Math.round(totalF / 7),
-      waterGoalCount: wCount,
-      breakfastCount: bCount,
+      weeklyData: days.map(d => ({ label: shortWeekday(d.date), value: d.calories, max: goals.calories })),
+      avgCalories: average(days.map(d => d.calories)),
+      avgProtein: average(days.map(d => d.macros.protein)),
+      avgCarbs: average(days.map(d => d.macros.carbs)),
+      avgFat: average(days.map(d => d.macros.fat)),
+      waterGoalCount: days.filter(d => d.waterMet).length,
+      breakfastCount: days.filter(d => d.hasBreakfast).length,
     }
   }, [last7Days, getCaloriesForDate, getMacrosForDate, getWaterForDate, goals.calories, goals.waterGlasses, meals])
 
@@ -49,18 +41,11 @@ export default function ProgressPage() {
   const weightChange = latestWeight - firstWeight
 
   // SVG weight chart
-  const weightPoints = useMemo(() => {
-    if (weightEntries.length === 0) return ''
-    const kgs = weightEntries.map(w => w.kg)
-    const minW = Math.min(...kgs) - 1
-    const maxW = Math.max(...kgs) + 1
-    const range = maxW - minW || 1
-    return weightEntries.map((w, i) => {
-      const x = 30 + (weightEntries.length > 1 ? (i / (weightEntries.length - 1)) * 340 : 170)
-      const y = 10 + (1 - (w.kg - minW) / range) * 100
-      return `${x},${y}`
-    }).join(' ')
-  }, [weightEntries])
+  const weightPoints = useMemo(
+    () => scaleLinePoints(weightEntries.map(w => w.kg)),
+    [weightEntries],
+  )
+  const weightPolyline = weightPoints.map(p => `${p.x},${p.y}`).join(' ')
 
   // Achievements evaluation
   const achievements = [
@@ -99,7 +84,7 @@ export default function ProgressPage() {
     {
       id: 'goalmaster',
       title: 'Goal Champion',
-      desc: `Averaging ${Math.round((avgCalories / goals.calories) * 100)}% of target calories`,
+      desc: `Averaging ${percentOf(avgCalories, goals.calories)}% of target calories`,
       icon: 'target',
       color: 'gold',
       unlocked: avgCalories >= goals.calories * 0.85 && avgCalories <= goals.calories * 1.15,
@@ -149,21 +134,13 @@ export default function ProgressPage() {
               <line x1="30" y1="90" x2="370" y2="90" />
               {weightEntries.length > 0 && (
                 <>
-                  <polyline points={weightPoints} />
-                  {weightEntries.map((w, i) => {
-                    const kgs = weightEntries.map(e => e.kg)
-                    const minW = Math.min(...kgs) - 1
-                    const maxW = Math.max(...kgs) + 1
-                    const range = maxW - minW || 1
-                    const x = 30 + (weightEntries.length > 1 ? (i / (weightEntries.length - 1)) * 340 : 170)
-                    const y = 10 + (1 - (w.kg - minW) / range) * 100
-                    return (
-                      <g key={w.date}>
-                        <circle cx={x} cy={y} r={4} />
-                        <text x={x} y={y - 10} textAnchor="middle">{w.kg}</text>
-                      </g>
-                    )
-                  })}
+                  <polyline points={weightPolyline} />
+                  {weightEntries.map((w, i) => (
+                    <g key={w.date}>
+                      <circle cx={weightPoints[i].x} cy={weightPoints[i].y} r={4} />
+                      <text x={weightPoints[i].x} y={weightPoints[i].y - 10} textAnchor="middle">{w.kg}</text>
+                    </g>
+                  ))}
                 </>
               )}
             </svg>

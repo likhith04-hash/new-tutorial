@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import Link from 'next/link'
 import Header from '@/app/components/Header'
 import CalorieHero from '@/app/components/CalorieHero'
@@ -11,42 +11,28 @@ import AddMealModal from '@/app/components/AddMealModal'
 import WeeklyChart from '@/app/components/WeeklyChart'
 import SmartNudge from '@/app/components/SmartNudge'
 import Icon from '@/app/components/Icon'
+import { useMealModal } from '@/app/lib/hooks'
 import { useNutrition, type Meal } from '@/app/components/NutritionContext'
+import { lastNDays, todayISO } from '@/app/lib/date'
+import { buildCalorieSeries, sumCalories } from '@/app/lib/nutrition'
 
 export default function DashboardPage() {
   const { goals, getMealsForDate, getMacrosForDate, getCaloriesForDate } = useNutrition()
-  const [showAdd, setShowAdd] = useState(false)
-  const [editingMeal, setEditingMeal] = useState<Meal | null>(null)
-  const today = new Date().toISOString().slice(0, 10)
+  const mealModal = useMealModal<Meal>()
+  const today = todayISO()
 
   const meals = getMealsForDate(today)
   const macros = getMacrosForDate(today)
-  const calories = meals.reduce((s, m) => s + m.calories, 0)
+  const calories = sumCalories(meals)
 
-  const weeklyData = useMemo(() => {
-    return Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(); d.setDate(d.getDate() - (6 - i))
-      return {
-        label: d.toLocaleDateString('en-US', { weekday: 'short' }),
-        value: getCaloriesForDate(d.toISOString().slice(0, 10)),
-        max: goals.calories,
-      }
-    })
-  }, [getCaloriesForDate, goals.calories])
-
-  const handleEditMeal = (meal: Meal) => {
-    setEditingMeal(meal)
-    setShowAdd(true)
-  }
-
-  const handleCloseModal = () => {
-    setShowAdd(false)
-    setEditingMeal(null)
-  }
+  const weeklyData = useMemo(
+    () => buildCalorieSeries(lastNDays(7), getCaloriesForDate, goals.calories),
+    [getCaloriesForDate, goals.calories],
+  )
 
   return (
     <>
-      <Header onLogFood={() => { setEditingMeal(null); setShowAdd(true) }} />
+      <Header onLogFood={mealModal.openAdd} />
 
       <CalorieHero date={today} />
 
@@ -75,18 +61,18 @@ export default function DashboardPage() {
           <h2>Today&apos;s meals</h2>
           <p>{meals.length} items logged · {calories.toLocaleString()} kcal</p>
         </div>
-        <button className="link" onClick={() => { setEditingMeal(null); setShowAdd(true) }}>Add meal <Icon name="plus" size={14} /></button>
+        <button className="link" onClick={mealModal.openAdd}>Add meal <Icon name="plus" size={14} /></button>
       </section>
 
       <section className="meal-list">
         {meals.length > 0 ? (
-          meals.map(meal => <MealCard key={meal.id} meal={meal} onEdit={handleEditMeal} />)
+          meals.map(meal => <MealCard key={meal.id} meal={meal} onEdit={mealModal.openEdit} />)
         ) : (
           <div className="empty-state" style={{ padding: '36px 20px', background: 'var(--clr-card)', borderRadius: 'var(--r-lg)', border: '1px dashed var(--clr-border)', textAlign: 'center' }}>
             <div className="empty-icon">🍽️</div>
             <h3 style={{ margin: '8px 0 4px', fontSize: 16 }}>No meals logged yet today</h3>
             <p className="empty-text" style={{ fontSize: 13, color: 'var(--clr-text-soft)', marginBottom: 16 }}>Start tracking to see your calorie &amp; macro breakdown.</p>
-            <button className="add" onClick={() => { setEditingMeal(null); setShowAdd(true) }}>
+            <button className="add" onClick={mealModal.openAdd}>
               <Icon name="plus" size={15} /> Add first meal
             </button>
           </div>
@@ -102,7 +88,7 @@ export default function DashboardPage() {
 
       <SmartNudge />
 
-      <AddMealModal open={showAdd} onClose={handleCloseModal} date={today} editMeal={editingMeal} />
+      <AddMealModal open={mealModal.open} onClose={mealModal.close} date={today} editMeal={mealModal.editing} />
     </>
   )
 }

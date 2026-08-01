@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Header from '@/app/components/Header'
 import Icon from '@/app/components/Icon'
 import MacroRing from '@/app/components/MacroRing'
 import { useNutrition, type UserGoals } from '@/app/components/NutritionContext'
+import { todayISO } from '@/app/lib/date'
+import { useSyncedState } from '@/app/lib/hooks'
 
 type ActivityLevel = UserGoals['activityLevel']
 
@@ -18,12 +19,10 @@ const ACTIVITIES: { id: ActivityLevel; label: string; desc: string }[] = [
 
 export default function GoalsPage() {
   const { goals, updateGoals, getMacrosForDate, getCaloriesForDate } = useNutrition()
-  const [local, setLocal] = useState(goals)
-  const today = new Date().toISOString().slice(0, 10)
+  const [local, setLocal] = useSyncedState(goals)
+  const today = todayISO()
   const todayMacros = getMacrosForDate(today)
   const todayCals = getCaloriesForDate(today)
-
-  useEffect(() => { setLocal(goals) }, [goals])
 
   const setField = (field: keyof UserGoals, value: number) => {
     setLocal(prev => ({ ...prev, [field]: value }))

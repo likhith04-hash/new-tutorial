@@ -6,30 +6,20 @@ import MealCard from '@/app/components/MealCard'
 import AddMealModal from '@/app/components/AddMealModal'
 import Icon from '@/app/components/Icon'
 import { useNutrition, type Meal } from '@/app/components/NutritionContext'
+import { longDateLabel, shiftISODate, todayISO } from '@/app/lib/date'
+import { useMealModal } from '@/app/lib/hooks'
+import { sumCalories } from '@/app/lib/nutrition'
 
 export default function DiaryPage() {
   const { getMealsForDate, getCaloriesForDate, getMacrosForDate } = useNutrition()
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 10))
-  const [showAdd, setShowAdd] = useState(false)
-  const [editingMeal, setEditingMeal] = useState<Meal | null>(null)
+  const [selectedDate, setSelectedDate] = useState(todayISO())
+  const mealModal = useMealModal<Meal>()
 
-  const todayStr = new Date().toISOString().slice(0, 10)
+  const todayStr = todayISO()
 
   const shiftDate = (dir: number) => {
-    const d = new Date(selectedDate + 'T12:00:00')
-    d.setDate(d.getDate() + dir)
-    const next = d.toISOString().slice(0, 10)
+    const next = shiftISODate(selectedDate, dir)
     if (next <= todayStr) setSelectedDate(next)
-  }
-
-  const handleEditMeal = (meal: Meal) => {
-    setEditingMeal(meal)
-    setShowAdd(true)
-  }
-
-  const handleCloseModal = () => {
-    setShowAdd(false)
-    setEditingMeal(null)
   }
 
   const meals = getMealsForDate(selectedDate)
@@ -40,11 +30,11 @@ export default function DiaryPage() {
     .map(type => ({ type, items: meals.filter(m => m.type === type) }))
     .filter(g => g.items.length > 0)
 
-  const dateLabel = new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+  const dateLabel = longDateLabel(selectedDate)
 
   return (
     <>
-      <Header onLogFood={() => { setEditingMeal(null); setShowAdd(true) }} />
+      <Header onLogFood={mealModal.openAdd} />
       <div className="diary-page">
         <div className="date-nav">
           <button className="date-nav-btn" onClick={() => shiftDate(-1)}>
@@ -71,10 +61,10 @@ export default function DiaryPage() {
             <div key={group.type} className="meal-group">
               <div className="meal-group-header">
                 <h3>{group.type}</h3>
-                <span>{group.items.reduce((s, m) => s + m.calories, 0)} kcal</span>
+                <span>{sumCalories(group.items)} kcal</span>
               </div>
               <div className="meal-list">
-                {group.items.map(meal => <MealCard key={meal.id} meal={meal} onEdit={handleEditMeal} />)}
+                {group.items.map(meal => <MealCard key={meal.id} meal={meal} onEdit={mealModal.openEdit} />)}
               </div>
             </div>
           ))
@@ -85,13 +75,13 @@ export default function DiaryPage() {
               <h3>No meals logged</h3>
               <p>Start tracking by adding your first meal for this day.</p>
             </div>
-            <button className="add" onClick={() => { setEditingMeal(null); setShowAdd(true) }}>
+            <button className="add" onClick={mealModal.openAdd}>
               <Icon name="plus" size={18} /> Add meal
             </button>
           </div>
         )}
       </div>
-      <AddMealModal open={showAdd} onClose={handleCloseModal} date={selectedDate} editMeal={editingMeal} />
+      <AddMealModal open={mealModal.open} onClose={mealModal.close} date={selectedDate} editMeal={mealModal.editing} />
     </>
   )
 }

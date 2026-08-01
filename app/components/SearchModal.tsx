@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Icon from '@/app/components/Icon'
 import { useNutrition, type Meal } from '@/app/components/NutritionContext'
+import { useEscapeKey } from '@/app/lib/hooks'
 
 interface SearchModalProps {
   open: boolean
@@ -21,15 +22,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
     }
   }, [open])
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (open && e.key === 'Escape') {
-        onClose()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [open, onClose])
+  useEscapeKey(open, onClose)
 
   if (!open) return null
 
