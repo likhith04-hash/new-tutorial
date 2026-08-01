@@ -70,6 +70,7 @@ function CoachContent() {
     const todayCals = getCaloriesForDate(todayStr)
     const todayMacros = getMacrosForDate(todayStr)
 
+    let streamStarted = false
     try {
       const res = await fetch('/api/coach', {
         method: 'POST',
@@ -86,6 +87,7 @@ function CoachContent() {
       })
 
       if (!res.ok || !res.body) {
+        console.error(`[coach] /api/coach responded with ${res.status}; using local fallback`)
         setIsTyping(false)
         addChatMessage({ role: 'assistant', content: generateResponse(userMsg) })
         return
@@ -97,8 +99,8 @@ function CoachContent() {
       setIsTyping(false)
 
       // Add empty assistant message to accumulate stream
-      const tempId = Math.random().toString(36).slice(2, 10)
       addChatMessage({ role: 'assistant', content: '' })
+      streamStarted = true
 
       while (true) {
         const { done, value } = await reader.read()
@@ -107,9 +109,24 @@ function CoachContent() {
         streamedContent += chunk
         updateLastChatMessage(streamedContent)
       }
-    } catch {
+
+      // If the stream ended without delivering anything, fall back locally
+      // instead of leaving an empty assistant bubble.
+      if (!streamedContent.trim()) {
+        console.error('[coach] /api/coach returned an empty stream; using local fallback')
+        updateLastChatMessage(generateResponse(userMsg))
+      }
+    } catch (err) {
+      console.error('[coach] Failed to reach /api/coach; using local fallback:', err)
       setIsTyping(false)
-      addChatMessage({ role: 'assistant', content: generateResponse(userMsg) })
+      const fallback = generateResponse(userMsg)
+      // If streaming had already begun, replace the (partial/empty) assistant
+      // bubble rather than appending a second one.
+      if (streamStarted) {
+        updateLastChatMessage(fallback)
+      } else {
+        addChatMessage({ role: 'assistant', content: fallback })
+      }
     }
   }, [isTyping, addChatMessage, generateResponse, goals, getCaloriesForDate, getMacrosForDate, profile.name])
 

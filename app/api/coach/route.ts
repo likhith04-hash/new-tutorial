@@ -3,8 +3,25 @@ import { NextResponse } from 'next/server'
 export const runtime = 'edge'
 
 export async function POST(req: Request) {
+  let body: unknown
   try {
-    const { prompt, goalType, name, caloriesLeft, proteinLeft, todayMacros, goals } = await req.json()
+    body = await req.json()
+  } catch (err) {
+    console.error('[api/coach] Invalid JSON body:', err)
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
+  }
+
+  try {
+    const { prompt, goalType, name, caloriesLeft, proteinLeft, todayMacros, goals } =
+      (body ?? {}) as {
+        prompt?: string
+        goalType?: string
+        name?: string
+        caloriesLeft?: number
+        proteinLeft?: number
+        todayMacros?: { protein?: number; carbs?: number; fat?: number }
+        goals?: { calories?: number; proteinG?: number }
+      }
     const lower = (prompt || '').toLowerCase()
     const firstName = (name || 'Friend').split(' ')[0]
 
@@ -52,6 +69,7 @@ export async function POST(req: Request) {
       },
     })
   } catch (err) {
+    console.error('[api/coach] Failed to process AI request:', err)
     return NextResponse.json({ error: 'Failed to process AI request' }, { status: 500 })
   }
 }
