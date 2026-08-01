@@ -166,12 +166,23 @@ function loadData(): StoredData | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     return raw ? (JSON.parse(raw) as StoredData) : null
-  } catch { return null }
+  } catch (err) {
+    // Corrupt or unreadable persisted data: fall back to seed data, but
+    // surface it rather than discarding the failure silently.
+    console.warn('[NutritionContext] Failed to load saved data, using defaults:', err)
+    return null
+  }
 }
 
 function saveData(data: StoredData) {
   if (typeof window === 'undefined') return
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) } catch { /* quota */ }
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  } catch (err) {
+    // Typically a QuotaExceededError or storage being disabled. The user's
+    // latest changes will not persist, so make the failure visible.
+    console.warn('[NutritionContext] Failed to persist data:', err)
+  }
 }
 
 /* ───────── Context ───────── */

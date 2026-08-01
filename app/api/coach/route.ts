@@ -101,7 +101,8 @@ export async function POST(req: Request) {
   let raw: string
   try {
     raw = await req.text()
-  } catch {
+  } catch (err) {
+    console.error('[api/coach] Failed to read request body:', err)
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 
@@ -112,7 +113,8 @@ export async function POST(req: Request) {
   let parsed: CoachRequest | null
   try {
     parsed = parseRequest(JSON.parse(raw))
-  } catch {
+  } catch (err) {
+    console.error('[api/coach] Invalid JSON body:', err)
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
