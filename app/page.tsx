@@ -1,5 +1,19 @@
-import DashboardPage from './dashboard/page'
+import Link from 'next/link'
 
-export default function Home() {
-  return <DashboardPage />
+const features = [
+  ['✦', 'AI meal analysis', 'Turn a plain-language food description into an editable nutrition estimate.'],
+  ['◒', 'Smart meal logging', 'Log meals in seconds, repeat favourites, and keep your day in balance.'],
+  ['◎', 'Personal guidance', 'Targets and recommendations adapt to your goal, activity, and preferences.'],
+]
+
+export default function LandingPage() {
+  return <main className="landing">
+    <nav className="landing-nav"><Link href="/" className="landing-brand"><span>n</span>Nourish</Link><div className="landing-links"><a href="#how-it-works">How it works</a><a href="#features">Features</a><Link href="/sign-in">Sign in</Link><Link href="/sign-in" className="landing-button small">Get started</Link></div></nav>
+    <section className="landing-hero"><div className="hero-copy-public"><p className="landing-kicker">PERSONALIZED NUTRITION, MADE SIMPLE</p><h1>Your personal <em>AI nutritionist.</em></h1><p>Understand what you eat, track your nutrition, and get personalized food guidance that fits your life—not a generic meal plan.</p><div className="landing-ctas"><Link href="/sign-in" className="landing-button">Start your nutrition journey <span>→</span></Link><a href="#how-it-works" className="text-cta">See how it works ↓</a></div><div className="trust-line"><b>Built for everyday eating</b><span>•</span><span>Indian cuisine included</span><span>•</span><span>Private by design</span></div></div><div className="product-preview"><div className="preview-top"><span>Today’s nutrition</span><i>Live</i></div><div className="preview-score"><b>1,187</b><span>of 2,100 kcal</span><div><i /></div><small>913 kcal remaining</small></div><div className="preview-macros"><span><b>75g</b> Protein</span><span><b>168g</b> Carbs</span><span><b>54g</b> Fat</span></div><div className="preview-coach"><strong>✦ Nourish AI</strong><p>You’re 55g short of protein. Want a high-protein Indian dinner?</p><button>Plan dinner →</button></div></div></section>
+    <section className="landing-problem"><p className="landing-kicker">NUTRITION SHOULDN’T BE A SPREADSHEET</p><h2>Less guessing. More confidence at every meal.</h2><p>Manual calorie tracking is exhausting, labels are confusing, and generic advice ignores the way you actually eat. Nourish turns your real habits into useful, practical next steps.</p></section>
+    <section id="features" className="landing-section"><div><p className="landing-kicker">DESIGNED AROUND YOU</p><h2>Guidance that meets you where you are.</h2></div><div className="feature-grid">{features.map(([icon, title, body]) => <article key={title}><span>{icon}</span><h3>{title}</h3><p>{body}</p></article>)}</div></section>
+    <section id="how-it-works" className="how-it-works"><p className="landing-kicker">HOW IT WORKS</p><h2>Three small steps. A healthier routine.</h2><div>{[['01', 'Tell Nourish about yourself', 'Share your goal, activity and food preferences.'], ['02', 'Log or photograph your food', 'Use quick logging, repeat meals, or AI meal analysis.'], ['03', 'Let AI guide your nutrition', 'See clear targets and meaningful suggestions for what’s next.']].map(([n,t,b]) => <article key={n}><b>{n}</b><h3>{t}</h3><p>{b}</p></article>)}</div></section>
+    <section className="landing-final"><p className="landing-kicker">MAKE YOUR NEXT MEAL COUNT</p><h2>Food guidance that feels personal.</h2><p>Set your goal, log your first meal, and see what a calmer nutrition routine can look like.</p><Link href="/sign-in" className="landing-button">Start with Nourish <span>→</span></Link></section>
+    <footer className="landing-footer"><span>© 2026 Nourish AI</span><div><a href="#features">Product</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a><a href="https://github.com/likhith04-hash/new-tutorial">GitHub</a></div></footer>
+  </main>
 }

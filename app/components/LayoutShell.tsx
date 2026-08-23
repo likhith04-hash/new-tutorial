@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import { NutritionProvider } from './NutritionContext'
 import Sidebar from './Sidebar'
 import SearchModal from './SearchModal'
@@ -8,6 +9,9 @@ import SearchModal from './SearchModal'
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const pathname = usePathname()
+  const router = useRouter()
+  const isPublic = ['/', '/sign-in', '/onboarding', '/privacy', '/terms'].includes(pathname)
 
   useEffect(() => {
     const handleOpenSearch = () => setSearchOpen(true)
@@ -27,6 +31,13 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [])
+
+  useEffect(() => {
+    if (isPublic) return
+    if (!localStorage.getItem('nourish-session')) router.replace('/sign-in')
+  }, [isPublic, router])
+
+  if (isPublic) return <NutritionProvider>{children}</NutritionProvider>
 
   return (
     <NutritionProvider>

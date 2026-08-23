@@ -24,14 +24,6 @@ const PRESETS = [
   { name: 'Protein Shake', type: 'Snack' as const, calories: 250, protein: 30, carbs: 10, fat: 4, detail: 'Whey protein, almond milk' },
 ]
 
-const DEMO_PHOTO_ESTIMATES = [
-  { name: 'Avocado Toast with Poached Egg', type: 'Breakfast' as const, calories: 380, protein: 14, carbs: 32, fat: 22, detail: 'AI Vision estimate · 94% confidence' },
-  { name: 'Grilled Chicken & Quinoa Bowl', type: 'Lunch' as const, calories: 520, protein: 42, carbs: 48, fat: 14, detail: 'AI Vision estimate · 91% confidence' },
-  { name: 'Berry Smoothie Bowl & Chia', type: 'Breakfast' as const, calories: 290, protein: 12, carbs: 52, fat: 6, detail: 'AI Vision estimate · 89% confidence' },
-  { name: 'Salmon Steak with Asparagus', type: 'Dinner' as const, calories: 460, protein: 36, carbs: 8, fat: 30, detail: 'AI Vision estimate · 96% confidence' },
-  { name: 'Greek Yogurt with Honey & Almonds', type: 'Snack' as const, calories: 230, protein: 18, carbs: 22, fat: 9, detail: 'AI Vision estimate · 93% confidence' },
-]
-
 export default function AddMealModal({ open, onClose, date, editMeal }: AddMealModalProps) {
   const { addMeal, updateMeal } = useNutrition()
   const [mode, setMode] = useState<'manual' | 'photo' | 'barcode'>('manual')
@@ -43,6 +35,7 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
   const [carbs, setCarbs] = useState(45)
   const [fat, setFat] = useState(14)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysisError, setAnalysisError] = useState('')
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -70,41 +63,31 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
 
   if (!open) return null
 
+  const analyzeDescription = async (description: string) => {
+    if (description.trim().length < 3) { setAnalysisError('Describe the meal first, then choose Analyze.'); return }
+    setAnalysisError(''); setIsAnalyzing(true)
+    try {
+      const res = await fetch('/api/meal-analysis', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ description }) })
+      const data = await res.json() as { meal?: { name: string; type: typeof type; detail: string; calories: number; protein: number; carbs: number; fat: number; confidence: string }; error?: string }
+      if (!res.ok || !data.meal) { setAnalysisError(data.error || 'Could not analyze that meal.'); return }
+      const meal = data.meal; setName(meal.name); setType(meal.type); setDetail(`${meal.detail} · AI estimate (${meal.confidence} confidence)`); setCalories(Math.round(meal.calories)); setProtein(Math.round(meal.protein)); setCarbs(Math.round(meal.carbs)); setFat(Math.round(meal.fat))
+    } catch { setAnalysisError('Meal analysis is temporarily unavailable. You can still enter values manually.') } finally { setIsAnalyzing(false) }
+  }
+
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     const reader = new FileReader()
     reader.onload = (event) => {
       setImagePreview(event.target?.result as string)
-      setIsAnalyzing(true)
-      setTimeout(() => {
-        setIsAnalyzing(false)
-        const est = DEMO_PHOTO_ESTIMATES[Math.floor(Math.random() * DEMO_PHOTO_ESTIMATES.length)]
-        setName(est.name)
-        setType(est.type)
-        setCalories(est.calories)
-        setProtein(est.protein)
-        setCarbs(est.carbs)
-        setFat(est.fat)
-        setDetail(est.detail)
-      }, 1200)
+      setAnalysisError('Image analysis needs a vision-enabled AI provider. Your image is not uploaded or stored; please describe the food to analyze it.')
     }
     reader.readAsDataURL(file)
   }
 
   const useBarcodeEstimate = () => {
     setMode('barcode')
-    setIsAnalyzing(true)
-    setTimeout(() => {
-      setIsAnalyzing(false)
-      setName('High-Protein Greek Yogurt (170g)')
-      setType('Snack')
-      setCalories(145)
-      setProtein(18)
-      setCarbs(11)
-      setFat(3)
-      setDetail('Barcode matched · OpenFoodFacts ID #890123')
-    }, 800)
+    setAnalysisError('Barcode lookup requires an Open Food Facts provider key. Use manual logging while it is not connected.')
   }
 
   const selectPreset = (p: typeof PRESETS[0]) => {
@@ -181,22 +164,25 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
         {isAnalyzing && (
           <div className="scan-assist" style={{ background: 'var(--clr-brand-light)', color: 'var(--clr-brand-hover)' }}>
             <Icon name="sparkle" size={18} />
-            <span>AI is analyzing {mode === 'photo' ? 'your photo...' : 'barcode data...'}</span>
+            <span>AI is analyzing your meal description…</span>
           </div>
         )}
+
+        {analysisError && <p className="form-error" role="alert">{analysisError}</p>}
 
         {imagePreview && mode === 'photo' && !isAnalyzing && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'var(--clr-bg)', padding: 8, borderRadius: 8, marginBottom: 12 }}>
             <img src={imagePreview} alt="Food scan preview" style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6 }} />
             <div style={{ fontSize: 12 }}>
-              <b>AI Estimate Ready</b>
-              <p style={{ margin: 0, color: 'var(--clr-text-soft)' }}>Review and adjust macros below before adding to diary.</p>
+              <b>Image selected locally</b>
+              <p style={{ margin: 0, color: 'var(--clr-text-soft)' }}>Vision analysis is not configured; no image was uploaded.</p>
             </div>
           </div>
         )}
 
         {!editMeal && mode === 'manual' && (
           <div style={{ marginBottom: 12 }}>
+            <div className="ai-analysis-row"><input aria-label="Describe a meal for AI analysis" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. 2 rotis, dal and paneer" /><button type="button" onClick={() => analyzeDescription(name)} disabled={isAnalyzing}>{isAnalyzing ? 'Analyzing…' : 'Analyze'}</button></div>
             <div style={{ fontSize: 11, color: 'var(--clr-text-faint)', fontWeight: 600, letterSpacing: 0.5, marginBottom: 6 }}>POPULAR PRESETS</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, maxHeight: 84, overflowY: 'auto' }}>
               {PRESETS.map((p, idx) => (
@@ -267,4 +253,3 @@ export default function AddMealModal({ open, onClose, date, editMeal }: AddMealM
     </div>
   )
 }
-
