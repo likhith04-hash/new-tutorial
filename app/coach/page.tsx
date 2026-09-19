@@ -7,7 +7,7 @@ import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
 
 function CoachContent() {
-  const { chatMessages, addChatMessage, goals, getCaloriesForDate, getMacrosForDate, profile } = useNutrition()
+  const { chatMessages, addChatMessage, goals, getCaloriesForDate, getMacrosForDate, getWaterForDate, meals, profile } = useNutrition()
   const searchParams = useSearchParams()
   const initialPromptProcessed = useRef(false)
 
@@ -28,6 +28,23 @@ function CoachContent() {
     const todayCals = getCaloriesForDate(todayStr)
     const todayMacros = getMacrosForDate(todayStr)
 
+    // Build 7-day trend and recent meals for richer context
+    const last7 = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(); d.setDate(d.getDate() - i)
+      return d.toISOString().slice(0, 10)
+    })
+    const weeklyTrend = last7.map(date => ({
+      date,
+      calories: getCaloriesForDate(date),
+      ...getMacrosForDate(date),
+      water: getWaterForDate(date),
+    }))
+    const recentMeals = meals
+      .filter(m => last7.includes(m.date))
+      .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id))
+      .slice(0, 15)
+      .map(m => `${m.date} ${m.type}: ${m.name} (${m.calories} kcal, P${m.protein}g C${m.carbs}g F${m.fat}g)`)
+
     try {
       const res = await fetch('/api/coach', {
         method: 'POST',
@@ -40,6 +57,8 @@ function CoachContent() {
           proteinLeft: Math.max(0, goals.proteinG - todayMacros.protein),
           todayMacros,
           goals,
+          weeklyTrend,
+          recentMeals,
         }),
       })
 
@@ -48,7 +67,7 @@ function CoachContent() {
     } catch {
       addChatMessage({ role: 'assistant', content: 'Nutrition AI is temporarily unavailable. Your saved meals are safe.' })
     } finally { setIsTyping(false) }
-  }, [isTyping, addChatMessage, goals, getCaloriesForDate, getMacrosForDate, profile.name])
+  }, [isTyping, addChatMessage, goals, getCaloriesForDate, getMacrosForDate, getWaterForDate, meals, profile.name])
 
   // Handle URL prompt query param on mount
   useEffect(() => {

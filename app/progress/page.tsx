@@ -3,6 +3,7 @@
 import { useMemo } from 'react'
 import Header from '@/app/components/Header'
 import WeeklyChart from '@/app/components/WeeklyChart'
+import WeeklyMacroChart from '@/app/components/WeeklyMacroChart'
 import MacroRing from '@/app/components/MacroRing'
 import Icon from '@/app/components/Icon'
 import { useNutrition } from '@/app/components/NutritionContext'
@@ -18,7 +19,7 @@ export default function ProgressPage() {
       return d.toISOString().slice(0, 10)
     }), [])
 
-  const { weeklyData, avgCalories, avgProtein, avgCarbs, avgFat, waterGoalCount, breakfastCount } = useMemo(() => {
+  const { weeklyData, weeklyMacroData, avgCalories, avgProtein, avgCarbs, avgFat, waterGoalCount, breakfastCount } = useMemo(() => {
     let totalCal = 0, totalP = 0, totalC = 0, totalF = 0
     let wCount = 0, bCount = 0
 
@@ -33,8 +34,19 @@ export default function ProgressPage() {
       return { label: new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }), value: cals, max: goals.calories }
     })
 
+    const wmd = last7Days.map(date => {
+      const m = getMacrosForDate(date)
+      return {
+        label: new Date(date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }),
+        protein: m.protein,
+        carbs: m.carbs,
+        fat: m.fat,
+      }
+    })
+
     return {
       weeklyData: wd,
+      weeklyMacroData: wmd,
       avgCalories: Math.round(totalCal / 7),
       avgProtein: Math.round(totalP / 7),
       avgCarbs: Math.round(totalC / 7),
@@ -137,6 +149,16 @@ export default function ProgressPage() {
         <div className="chart-section">
           <div className="section-heading"><div><h2>Weekly Calories</h2><p>Your intake over the past 7 days</p></div></div>
           <WeeklyChart data={weeklyData} title="Daily Calories" />
+        </div>
+
+        <div className="chart-section">
+          <div className="section-heading"><div><h2>Weekly Macros</h2><p>Protein, carbs, and fat over the past 7 days</p></div></div>
+          <div className="chart-card">
+            <WeeklyMacroChart
+              data={weeklyMacroData}
+              targets={{ protein: goals.proteinG, carbs: goals.carbsG, fat: goals.fatG }}
+            />
+          </div>
         </div>
 
         <div className="chart-section">
