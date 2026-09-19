@@ -74,16 +74,16 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Leaf className="w-6 h-6 text-green-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Nourish</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Nourish</h1>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{user?.name}</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">{user?.name}</span>
             <Button variant="outline" size="sm" onClick={() => logout()}>
               Logout
             </Button>
@@ -92,24 +92,24 @@ export default function Dashboard() {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 flex gap-6">
           <button onClick={() => setLocation("/dashboard")} className="py-3 px-2 border-b-2 border-green-600 text-green-600 font-medium text-sm">
             Dashboard
           </button>
-          <button onClick={() => setLocation("/food-diary")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">
+          <button onClick={() => setLocation("/food-diary")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 font-medium text-sm">
             Food Diary
           </button>
-          <button onClick={() => setLocation("/progress")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">
+          <button onClick={() => setLocation("/progress")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 font-medium text-sm">
             Progress
           </button>
-          <button onClick={() => setLocation("/ai-coach")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">
+          <button onClick={() => setLocation("/ai-coach")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 font-medium text-sm">
             AI Coach
           </button>
-          <button onClick={() => setLocation("/goals")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">
+          <button onClick={() => setLocation("/goals")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 font-medium text-sm">
             Goals
           </button>
-          <button onClick={() => setLocation("/settings")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 hover:text-gray-900 font-medium text-sm">
+          <button onClick={() => setLocation("/settings")} className="py-3 px-2 border-b-2 border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 font-medium text-sm">
             Settings
           </button>
         </div>
@@ -119,29 +119,29 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Greeting */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
             Good {new Date().getHours() < 12 ? "morning" : new Date().getHours() < 18 ? "afternoon" : "evening"}, {user?.name}
           </h2>
-          <p className="text-gray-600">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}</p>
+          <p className="text-gray-600 dark:text-gray-400">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}</p>
         </div>
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Calorie Card */}
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2 dark:bg-gray-900 dark:border-gray-800">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle>Daily Calorie Target</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Consumed</p>
-                  <p className="text-3xl font-bold text-gray-900">{totalCalories} <span className="text-lg text-gray-600">kcal</span></p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Consumed</p>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{totalCalories} <span className="text-lg text-gray-600 dark:text-gray-400">kcal</span></p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm text-gray-600">Remaining</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Remaining</p>
                   <p className={`text-3xl font-bold ${calorieRemaining >= 0 ? "text-green-600" : "text-red-600"}`}>
-                    {Math.abs(calorieRemaining)} <span className="text-lg text-gray-600">kcal</span>
+                    {Math.abs(calorieRemaining)} <span className="text-lg text-gray-600 dark:text-gray-400">kcal</span>
                   </p>
                 </div>
               </div>
@@ -151,19 +151,19 @@ export default function Dashboard() {
                   style={{ width: `${caloriePercent}%` }}
                 />
               </div>
-              <p className="text-sm text-gray-600">Target: {calorieTarget} kcal</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">Target: {calorieTarget} kcal</p>
             </CardContent>
           </Card>
 
           {/* Hydration Card */}
-          <Card>
+          <Card className="dark:bg-gray-900 dark:border-gray-800">
             <CardHeader>
               <CardTitle>Hydration</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center">
                 <p className="text-4xl font-bold text-blue-600">{todayHydration || 0}</p>
-                <p className="text-sm text-gray-600">/ {goals?.hydrationTarget || 2000} ml</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">/ {goals?.hydrationTarget || 2000} ml</p>
               </div>
               <Button
                 onClick={handleAddGlass}
@@ -178,7 +178,7 @@ export default function Dashboard() {
         </div>
 
         {/* Macro Breakdown */}
-        <Card className="mb-8">
+        <Card className="mb-8 dark:bg-gray-900 dark:border-gray-800">
           <CardHeader>
             <CardTitle>Macro Breakdown</CardTitle>
           </CardHeader>
@@ -187,7 +187,7 @@ export default function Dashboard() {
               {/* Protein */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">Protein</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Protein</span>
                   <span className="text-sm font-bold text-red-600">{Math.round(totalProtein)}g / {proteinTarget}g</span>
                 </div>
                 <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
@@ -201,7 +201,7 @@ export default function Dashboard() {
               {/* Carbs */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">Carbs</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Carbs</span>
                   <span className="text-sm font-bold text-blue-600">{Math.round(totalCarbs)}g / {carbsTarget}g</span>
                 </div>
                 <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
@@ -215,7 +215,7 @@ export default function Dashboard() {
               {/* Fat */}
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">Fat</span>
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Fat</span>
                   <span className="text-sm font-bold text-amber-600">{Math.round(totalFat)}g / {fatTarget}g</span>
                 </div>
                 <div className="bg-gray-200 h-2 rounded-full overflow-hidden">
@@ -230,7 +230,7 @@ export default function Dashboard() {
         </Card>
 
           {/* Today's Meals */}
-        <Card className="mb-8">
+        <Card className="mb-8 dark:bg-gray-900 dark:border-gray-800">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Today's Meals</CardTitle>
             <Button onClick={() => setShowFoodLogging(true)} className="bg-green-600 hover:bg-green-700">
@@ -242,10 +242,10 @@ export default function Dashboard() {
             {todayLogs && todayLogs.length > 0 ? (
               <div className="space-y-3">
                 {todayLogs.map((log) => (
-                  <div key={log.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={log.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex-1">
-                      <p className="font-medium text-gray-900">Food Item</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="font-medium text-gray-900 dark:text-gray-100">{(log as any).foodName || "Manual entry"}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
                         {log.calories} kcal • {Math.round(parseFloat(log.protein as any))}g protein
                       </p>
                     </div>
@@ -265,7 +265,7 @@ export default function Dashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-center text-gray-500 py-8">No meals logged yet. Start by logging your first meal!</p>
+              <p className="text-center text-gray-500 dark:text-gray-400 py-8">No meals logged yet. Start by logging your first meal!</p>
             )}
           </CardContent>
         </Card>

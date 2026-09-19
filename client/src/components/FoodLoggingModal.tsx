@@ -179,7 +179,7 @@ export default function FoodLoggingModal({ isOpen, onClose, onSuccess }: FoodLog
                     }}
                     className="w-full p-2 text-left rounded-lg border border-gray-200 hover:border-green-400 hover:bg-green-50 transition"
                   >
-                    <p className="font-medium text-gray-900 text-sm">{log.calories} kcal</p>
+                    <p className="font-medium text-gray-900 text-sm">{(log as any).foodName || `${log.calories} kcal`}</p>
                   </button>
                 ))}
               </div>

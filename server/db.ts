@@ -171,7 +171,22 @@ export async function getTodaysFoodLogs(userId: number) {
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  return db.select().from(foodLogs)
+  return db.select({
+    id: foodLogs.id,
+    userId: foodLogs.userId,
+    foodId: foodLogs.foodId,
+    mealType: foodLogs.mealType,
+    quantity: foodLogs.quantity,
+    calories: foodLogs.calories,
+    protein: foodLogs.protein,
+    carbs: foodLogs.carbs,
+    fat: foodLogs.fat,
+    loggedAt: foodLogs.loggedAt,
+    createdAt: foodLogs.createdAt,
+    updatedAt: foodLogs.updatedAt,
+    foodName: foods.name,
+  }).from(foodLogs)
+    .leftJoin(foods, eq(foodLogs.foodId, foods.id))
     .where(and(
       eq(foodLogs.userId, userId),
       gte(foodLogs.loggedAt, today),
@@ -189,7 +204,22 @@ export async function getFoodLogsForDate(userId: number, date: Date) {
   const endOfDay = new Date(date);
   endOfDay.setHours(23, 59, 59, 999);
 
-  return db.select().from(foodLogs)
+  return db.select({
+    id: foodLogs.id,
+    userId: foodLogs.userId,
+    foodId: foodLogs.foodId,
+    mealType: foodLogs.mealType,
+    quantity: foodLogs.quantity,
+    calories: foodLogs.calories,
+    protein: foodLogs.protein,
+    carbs: foodLogs.carbs,
+    fat: foodLogs.fat,
+    loggedAt: foodLogs.loggedAt,
+    createdAt: foodLogs.createdAt,
+    updatedAt: foodLogs.updatedAt,
+    foodName: foods.name,
+  }).from(foodLogs)
+    .leftJoin(foods, eq(foodLogs.foodId, foods.id))
     .where(and(
       eq(foodLogs.userId, userId),
       gte(foodLogs.loggedAt, startOfDay),
@@ -206,7 +236,22 @@ export async function getRecentFoodLogs(userId: number, days: number = 7) {
   startDate.setDate(startDate.getDate() - days);
   startDate.setHours(0, 0, 0, 0);
 
-  return db.select().from(foodLogs)
+  return db.select({
+    id: foodLogs.id,
+    userId: foodLogs.userId,
+    foodId: foodLogs.foodId,
+    mealType: foodLogs.mealType,
+    quantity: foodLogs.quantity,
+    calories: foodLogs.calories,
+    protein: foodLogs.protein,
+    carbs: foodLogs.carbs,
+    fat: foodLogs.fat,
+    loggedAt: foodLogs.loggedAt,
+    createdAt: foodLogs.createdAt,
+    updatedAt: foodLogs.updatedAt,
+    foodName: foods.name,
+  }).from(foodLogs)
+    .leftJoin(foods, eq(foodLogs.foodId, foods.id))
     .where(and(
       eq(foodLogs.userId, userId),
       gte(foodLogs.loggedAt, startDate)
