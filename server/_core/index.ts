@@ -44,8 +44,10 @@ async function startServer() {
       createContext,
     })
   );
-  // development mode uses Vite, production mode uses static files
-  if (process.env.NODE_ENV === "development") {
+  // development mode uses Vite, production mode uses static files.
+  // Default to Vite dev unless NODE_ENV is explicitly "production", so the
+  // preview launcher (which can't inject NODE_ENV) still serves the live app.
+  if (process.env.NODE_ENV !== "production") {
     await setupVite(app, server);
   } else {
     serveStatic(app);

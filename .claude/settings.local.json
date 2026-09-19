@@ -5,7 +5,10 @@
       "Bash(pnpm install *)",
       "Bash(npm *)",
       "Bash(npx pnpm *)",
-      "Bash(pnpm build *)"
+      "Bash(pnpm build *)",
+      "Bash(command -v pnpm)",
+      "Bash(node -e \"const p=require\\('./node_modules/tsx/package.json'\\); console.log\\('version',p.version\\); console.log\\('bin',JSON.stringify\\(p.bin\\)\\); console.log\\('exports',JSON.stringify\\(p.exports&&Object.keys\\(p.exports\\)\\)\\)\")",
+      "Bash(npm install *)"
     ]
   }
 }
