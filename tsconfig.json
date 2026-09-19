@@ -1,6 +1,6 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
+  "include": ["app/**/*", "lib/**/*", "shared/**/*", "server/**/*", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "build", "dist", "**/*.test.ts", "client/**/*"],
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
@@ -14,9 +14,10 @@
     "allowImportingTsExtensions": true,
     "moduleResolution": "bundler",
     "baseUrl": ".",
-        "paths": {
-      "@/*": ["./client/src/*"],
+    "paths": {
+      "@/*": ["./*"],
       "@shared/*": ["./shared/*"]
-    }
+    },
+    "plugins": [{ "name": "next" }]
   }
 }
