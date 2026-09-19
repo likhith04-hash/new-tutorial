@@ -11,8 +11,8 @@
 - [x] Implement Manus OAuth login page
 - [x] Build onboarding flow: collect age, weight, height, activity level, goal type
 - [x] Calculate and set initial daily calorie/macro/hydration targets
-- [ ] Add name field to onboarding (currently skipped)
-- [ ] Allow users to override calculated targets before saving
+- [x] Add name field to onboarding (currently skipped)
+- [x] Allow users to override calculated targets before saving
 - [x] Store onboarding data in database
 
 ## Phase 3: Dashboard
@@ -22,9 +22,9 @@
 - [x] Build hydration tracker with +1 glass button
 - [x] Display today's meals list with calories and protein
 - [x] Build "Log food" button
-- [ ] Create AI Insight card with data-derived insights (not static placeholders)
+- [x] Create AI Insight card with data-derived insights (not static placeholders)
 - [x] Build weekly calorie chart (last 7 days) with Recharts - bar chart
-- [ ] Build weekly macro chart (last 7 days) with Recharts - line chart
+- [x] Build weekly macro chart (last 7 days) with Recharts - line chart
 - [x] Verify all values are bound to real data
 - [ ] Test at mobile, tablet, and desktop widths
 
@@ -69,8 +69,8 @@
 - [x] Build weekly macro trend chart
 - [x] Implement streak tracking (e.g., 7-day logging streak)
 - [x] Create achievement badges (Hydration Hero, Protein Power, etc.)
-- [ ] Ensure badges are based on real logged data with locked/greyed states
-- [ ] Test data binding and calculations
+- [x] Ensure badges are based on real logged data with locked/greyed states
+- [x] Test data binding and calculations
 
 ## Phase 9: Settings Page
 - [x] Build profile info display (name, email)
@@ -88,7 +88,7 @@
 - [x] Implement food logging modal/page
 - [x] Add Claude API integration for AI Coach
 - [x] Add name field to onboarding
-- [ ] Add target override capability in onboarding
+- [x] Add target override capability in onboarding
 - [x] Persist hydration data to database
 - [ ] Join food logs with food names
 - [ ] Build real date picker for Food Diary
@@ -100,7 +100,7 @@
 - [ ] Expand AI Coach prompt with recent meals and trends
 
 ## Phase 11: Deployment
-- [ ] Deploy to Vercel
+- [x] Deploy to Vercel
 - [ ] Verify all features work end-to-end in production
 - [ ] Test authentication flow
 - [ ] Confirm database connections work
