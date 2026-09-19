@@ -12,6 +12,7 @@ interface SidebarProps {
 
 const links = [
   { href: '/dashboard', label: 'Dashboard', icon: 'grid' },
+  { href: '/diet-plan', label: 'Meal plan', icon: 'sparkle', badge: 'New' },
   { href: '/progress', label: 'Progress', icon: 'chart' },
   { href: '/diary', label: 'Food diary', icon: 'fork' },
   { href: '/coach', label: 'AI coach', icon: 'sparkle', badge: 'New' },
