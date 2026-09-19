@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { NutritionProvider } from './NutritionContext'
 import Sidebar from './Sidebar'
 import SearchModal from './SearchModal'
@@ -10,8 +11,9 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const pathname = usePathname()
-  const router = useRouter()
+  const { data: session, status } = useSession()
   const isPublic = ['/', '/sign-in', '/onboarding', '/privacy', '/terms'].includes(pathname)
+  const isAuth = status === 'authenticated'
 
   useEffect(() => {
     const handleOpenSearch = () => setSearchOpen(true)
@@ -32,12 +34,10 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     }
   }, [])
 
-  useEffect(() => {
-    if (isPublic) return
-    if (!localStorage.getItem('nourish-session')) router.replace('/sign-in')
-  }, [isPublic, router])
-
-  if (isPublic) return <NutritionProvider>{children}</NutritionProvider>
+  // Public pages or loading state — show without sidebar
+  if (isPublic || status === 'loading') {
+    return <NutritionProvider>{children}</NutritionProvider>
+  }
 
   return (
     <NutritionProvider>
